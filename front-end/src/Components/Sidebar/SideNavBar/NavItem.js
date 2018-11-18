@@ -10,12 +10,12 @@ const NavItem = ({ name = '', link = '', subLinks = [] }) => {
     <div className="side-nav-bar-item">
       <NavLink
         to={link}
-        className="text-secondary nav-link"
+        className="text-secondary nav-link p-1"
         activeClassName="text-dark"
       >
         {name}
       </NavLink>
-      <div className="sub-links ml-3">
+      <div className="sub-links ml-2">
         {subLinks.map(item => (
           <NavItem {...item} key={getKey()} />
         ))}

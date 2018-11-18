@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import NavBar from './Components/NavBar';
 import Main from './Components/Main';
 import Sidebar from './Components/Sidebar';
-import PageLinks from './Components/PageLinks';
 
 const links = [
   {
@@ -42,7 +41,6 @@ class App extends Component {
       >
         <Sidebar links={links} className="p-3 border-right" />
         <Main className="p-3 flex-grow-1" />
-        <PageLinks className=" p-3 border-left d-none d-xl-block" />
       </div>
     ];
   }
