@@ -1,5 +1,6 @@
 .side-nav-bar {
   overflow: hidden;
+  font-size: 0.7rem;
 
   @media (max-width: 991.98px) {
     height: 0;
@@ -20,4 +21,8 @@
   a.text-dark+div.sub-links {
     display: block;
   }
+}
+
+#sidebar {
+  max-width: 25%;
 }

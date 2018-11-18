@@ -19,14 +19,10 @@ export default class Main extends Component {
     return (
       <main className={this.props.className}>
         <div className="container">
-          <div className="row">
-            <div className="col">
-              <Route path="/supervised" component={Supervised} />
-              <Route path="/unsupervised" component={Unsupervised} />
-              <Route path="/reinforcement" component={Reinforcement} />
-              <Route path="/recommender" component={Recommender} />
-            </div>
-          </div>
+          <Route path="/supervised" component={Supervised} />
+          <Route path="/unsupervised" component={Unsupervised} />
+          <Route path="/reinforcement" component={Reinforcement} />
+          <Route path="/recommender" component={Recommender} />
         </div>
       </main>
     );

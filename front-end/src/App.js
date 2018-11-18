@@ -16,7 +16,12 @@ const links = [
           {
             name:
               'Linear regression with one variable (Univariate linear regression)',
-            link: '/supervised/regression/linear'
+            link: '/supervised/regression/linear-uni'
+          },
+          {
+            name:
+              'Linear regression with multiple variables',
+            link: '/supervised/regression/linear-multi'
           }
         ]
       },
