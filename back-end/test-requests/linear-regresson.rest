@@ -1,0 +1,3 @@
+###
+POST http://localhost:5000/housing_prices/compute_cost  HTTP/1.1
+Accept: application/json

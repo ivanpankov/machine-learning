@@ -13,8 +13,6 @@ export const chartLayout = {
     title: "Population of City in 10,000s (x)",
     titlefont: {
       size: 13
-      // family: "Courier New, monospace",
-      // color: "#7f7f7f"
     }
   },
   yaxis: {

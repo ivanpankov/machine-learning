@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MathJax from 'react-mathjax';
 import Plot from 'react-plotly.js';
-import { getHousingPrices } from '../../../../services/housingPrices';
+import {
+  getHousingPrices,
+  // computeCost,
+  gradientDescent
+} from '../../../../services/housingPrices';
 import serviceStatus from '../../../../services/serviceStatus';
 import {
   texHypothesis,
@@ -85,10 +89,19 @@ export default class LinearRegressionUni extends Component {
     }
   }
 
+  onCompute = async () => {
+    const theta = [[0], [0]];
+    const data = this.state.housingPrices.rows;
+    // const costFunc = await computeCost(data, theta);
+    const gc = await gradientDescent(data, theta, 0.01, 1500);
+
+    console.log(gc);
+  };
+
   render() {
     const { rows } = this.state.housingPrices;
     const count = rows.length;
-    console.log(rows);
+
     return (
       <MathJax.Provider>
         <div className="container">
@@ -147,7 +160,7 @@ export default class LinearRegressionUni extends Component {
                 <MathJax.Node
                   formula={texGoal}
                   className="d-inline-block pl-3"
-                  style={{ position: 'relative', top: '12px' }}
+                  style={{ position: 'relative', top: '10px' }}
                 />
               </div>
             </div>
@@ -171,6 +184,11 @@ export default class LinearRegressionUni extends Component {
           <div className="row">
             <div className="col">
               <Plot data={this.state.chart} layout={chartLayout} />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col">
+              <button onClick={this.onCompute}>Compute</button>
             </div>
           </div>
         </div>
