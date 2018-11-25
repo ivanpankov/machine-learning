@@ -1,0 +1,26 @@
+.theta-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.theta {
+  width: 40px;
+  border: none;
+  height: 40px;
+  display: inline-block;
+}
+
+.theta + div {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  color: gray;
+  text-align: center;
+}
+
+.theta:focus + div {
+  color: red;
+  display: none!important;
+}

@@ -1,106 +1,122 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import MathJax from 'react-mathjax';
-import Plot from 'react-plotly.js';
-import {
-  getHousingPrices,
-  // computeCost,
-  gradientDescent
-} from '../../../../services/housingPrices';
+import { gradientDescentUni, hypothesis } from '../../../../services/ml';
 import serviceStatus from '../../../../services/serviceStatus';
 import {
   texHypothesis,
   texParameters,
   texCostFunction,
-  texGoal,
-  chartLayout
+  texGoal
 } from './constants';
+import { getDataByFile } from '../../../../services/ml';
+import DataTable from './DataTable';
+import DataChart from './DataChart';
 
-class Row extends Component {
-  static propTypes = {
-    row: PropTypes.array
-  };
+import './styles.scss';
 
-  static defaultProps = {
-    row: ['', '']
-  };
-
-  render() {
-    return (
-      <tr>
-        <td>{this.props.row[0]}</td>
-        <td>{this.props.row[1]}</td>
-      </tr>
-    );
-  }
-}
+const ALPHA = 0.01;
+const NUMBER_OF_ITERATIONS = 1500;
+const INITIAL_THETA = [[0], [0]];
 
 export default class LinearRegressionUni extends Component {
   state = {
-    housingPrices: { rows: [], status: serviceStatus.OK },
-    chart: [
-      {
-        x: [],
-        y: [],
-        type: 'scatter',
-        mode: 'markers',
-        marker: { color: 'red' }
-      }
-    ],
-    x: [],
-    y: []
+    data: { status: serviceStatus.OK, error: {}, x: [], y: [] },
+    theta: { status: serviceStatus.OK, error: {}, value: INITIAL_THETA },
+    hypothesis: { status: serviceStatus.LOADING, error: {}, value: [[]] }
   };
 
   async componentDidMount() {
     this.setState({
-      housingPrices: { rows: [], status: serviceStatus.LOADING }
+      data: { status: serviceStatus.LOADING, error: {}, x: [], y: [] }
     });
 
-    const response = await getHousingPrices();
+    const response = await getDataByFile('ex1data1.txt');
 
-    if (response) {
-      const x = response.map(row => row[0]); // input features
-      const y = response.map(row => row[1]); // output
-
+    if (response instanceof Error) {
       this.setState({
-        housingPrices: {
-          rows: response,
-          status: serviceStatus.OK
-        },
-        x,
-        y,
-        chart: [
-          {
-            x,
-            y,
-            type: 'scatter',
-            mode: 'markers',
-            marker: { color: 'red' }
-          }
-        ]
+        data: { status: serviceStatus.ERROR, error: response, x: [], y: [] }
       });
     } else {
       this.setState({
-        housingPrices: {
-          rows: [[[<h3>Error loading data!</h3>]]],
-          status: serviceStatus.ERROR
+        data: {
+          status: serviceStatus.OK,
+          error: {},
+          x: response.x,
+          y: response.y
         }
       });
     }
   }
 
-  onCompute = async () => {
-    const theta = [[0], [0]];
-    const data = this.state.housingPrices.rows;
-    // const costFunc = await computeCost(data, theta);
-    const gc = await gradientDescent(data, theta, 0.01, 1500);
+  computeHypothesis = async theta => {
+    this.setState({
+      hypothesis: { status: serviceStatus.LOADING, error: {}, value: [[]] }
+    });
 
-    console.log(gc);
+    const { x } = this.state.data;
+    const response = await hypothesis(x, theta);
+
+    if (response instanceof Error) {
+      this.setState({
+        hypothesis: {
+          status: serviceStatus.ERROR,
+          error: response,
+          value: 'error'
+        }
+      });
+    } else {
+      this.setState({
+        hypothesis: {
+          status: serviceStatus.OK,
+          error: {},
+          value: response
+        }
+      });
+    }
+  };
+
+  computeTheta = async () => {
+    this.setState({
+      theta: { status: serviceStatus.LOADING, error: {}, value: INITIAL_THETA }
+    });
+
+    const { x, y } = this.state.data;
+    const response = await gradientDescentUni(
+      x,
+      y,
+      INITIAL_THETA,
+      ALPHA,
+      NUMBER_OF_ITERATIONS
+    );
+
+    if (response instanceof Error) {
+      this.setState({
+        theta: {
+          status: serviceStatus.ERROR,
+          error: response,
+          value: INITIAL_THETA
+        }
+      });
+    } else {
+      this.setState({
+        theta: {
+          status: serviceStatus.OK,
+          error: {},
+          value: response
+        }
+      });
+
+      this.computeHypothesis(response);
+    }
   };
 
   render() {
-    const { rows } = this.state.housingPrices;
-    const count = rows.length;
+    const { data } = this.state;
+    const count = data.y.length;
+    const theta0 = this.state.theta.value[0][0].toFixed(3);
+    const theta1 = this.state.theta.value[1][0].toFixed(3);
+    const hypoFormula = `${texHypothesis} = ${theta0} + ${theta1}x`;
 
     return (
       <MathJax.Provider>
@@ -165,32 +181,33 @@ export default class LinearRegressionUni extends Component {
               </div>
             </div>
             <div className="col">
-              <table className="table table-bordered">
-                <thead>
-                  <tr>
-                    <th scope="col">(X) Population of City in 10,000s</th>
-                    <th scope="col">(Y) Profit in $10,000s</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.slice(0, 5).map((row, i) => (
-                    <Row key={i} row={row} />
-                  ))}
-                  <Row row={['...', '...']} />
-                </tbody>
-              </table>
+              <DataTable {...data} />
             </div>
           </div>
           <div className="row">
             <div className="col">
-              <Plot data={this.state.chart} layout={chartLayout} />
+              <DataChart data={data} hypo={this.state.hypothesis}/>
             </div>
-          </div>
-          <div className="row">
             <div className="col">
-              <button onClick={this.onCompute}>Compute</button>
+              <div>
+                {this.state.theta.status === serviceStatus.OK ? (
+                  <MathJax.Node
+                    formula={hypoFormula}
+                    className="d-inline-block"
+                  />
+                ) : (
+                  <span>Calculating ...</span>
+                )}
+              </div>
+
+              <div>
+                <button onClick={this.computeTheta}>
+                  Compute thetas with Gradient Descent
+                </button>
+              </div>
             </div>
           </div>
+          <div className="row">next</div>
         </div>
       </MathJax.Provider>
     );
