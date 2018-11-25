@@ -19,7 +19,5 @@ def csv_file_to_json(file_path):
     return jsonify(result)
 
 
-def test_function():
-    name = 'blah'
-
-    return name;
+def get_file_path(file_name):
+    return os.path.join(ROOT_DIR, file_name)
