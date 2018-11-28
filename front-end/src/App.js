@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import NavBar from './Components/NavBar';
 import Main from './Components/Main';
 import Sidebar from './Components/Sidebar';
+import Toast from './Components/Toast';
+import { MessagesProvider } from './providers/Messages';
 
 const links = [
   {
@@ -18,8 +20,7 @@ const links = [
             link: '/supervised/regression/linear-uni'
           },
           {
-            name:
-              'Linear regression with multiple variables',
+            name: 'Linear regression with multiple variables',
             link: '/supervised/regression/linear-multi'
           }
         ]
@@ -31,18 +32,21 @@ const links = [
   { name: 'Reinforcement learning', link: '/reinforcement' },
   { name: 'Recommender system', link: '/recommender' }
 ];
+
 class App extends Component {
   render() {
-    return [
-      <NavBar key="navbar" />,
-      <div
-        className="d-flex flex-grow-1 flex-column flex-lg-row"
-        key="container"
-      >
-        <Sidebar links={links} className="p-3 border-right" />
-        <Main className="p-3 flex-grow-1" />
-      </div>
-    ];
+    return (
+      <>
+        <NavBar />
+        <MessagesProvider>
+          <div className="d-flex flex-grow-1 flex-column flex-lg-row">
+            <Sidebar links={links} className="p-3 border-right" />
+            <Main className="p-3 flex-grow-1" />
+          </div>
+          <Toast />
+        </MessagesProvider>
+      </>
+    );
   }
 }
 
