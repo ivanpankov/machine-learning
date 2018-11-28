@@ -29,7 +29,7 @@ export class MessagesProvider extends Component {
       }, MESSAGE_LIFETIME);
     }
 
-    setInterval(() => {
+    setTimeout(() => {
       this.setState({
         messages: [
           {
@@ -45,7 +45,7 @@ export class MessagesProvider extends Component {
   render() {
     return (
       <MessagesContext.Provider
-        value={{ list: this.state.messages, addMessage: this.addMessage }}
+        value={{ list: this.state.messages, addMessage: this.addMessage, ALERT_TYPES }}
       >
         {this.props.children}
       </MessagesContext.Provider>

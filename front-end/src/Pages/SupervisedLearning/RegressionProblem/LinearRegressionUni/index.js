@@ -12,6 +12,7 @@ import {
 import { getDataByFile } from '../../../../services/ml';
 import DataTable from './DataTable';
 import DataChart from './DataChart';
+import { withMessages } from '../../../../providers/Messages';
 
 import './styles.scss';
 
@@ -19,7 +20,7 @@ const ALPHA = 0.01;
 const NUMBER_OF_ITERATIONS = 1500;
 const INITIAL_THETA = [[0], [0]];
 
-export default class LinearRegressionUni extends Component {
+class LinearRegressionUni extends Component {
   state = {
     data: { status: serviceStatus.OK, error: {}, x: [], y: [] },
     theta: { status: serviceStatus.OK, error: {}, value: INITIAL_THETA },
@@ -34,6 +35,13 @@ export default class LinearRegressionUni extends Component {
     const response = await getDataByFile('ex1data1.txt');
 
     if (response instanceof Error) {
+      const { messages } = this.props;
+
+      messages.addMessage({
+        type: messages.ALERT_TYPES.DANGER,
+        content: `ERROR ${response.status}: ${response.message}`
+      });
+
       this.setState({
         data: { status: serviceStatus.ERROR, error: response, x: [], y: [] }
       });
@@ -117,7 +125,7 @@ export default class LinearRegressionUni extends Component {
     const theta0 = this.state.theta.value[0][0].toFixed(3);
     const theta1 = this.state.theta.value[1][0].toFixed(3);
     const hypoFormula = `${texHypothesis} = ${theta0} + ${theta1}x`;
-
+    console.log(this.props.messages);
     return (
       <MathJax.Provider>
         <div className="container">
@@ -186,7 +194,7 @@ export default class LinearRegressionUni extends Component {
           </div>
           <div className="row">
             <div className="col">
-              <DataChart data={data} hypo={this.state.hypothesis}/>
+              <DataChart data={data} hypo={this.state.hypothesis} />
             </div>
             <div className="col">
               <div>
@@ -213,3 +221,5 @@ export default class LinearRegressionUni extends Component {
     );
   }
 }
+
+export default withMessages(LinearRegressionUni);
