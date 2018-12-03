@@ -6,7 +6,7 @@ export const texGoal =
   '{minimize\\atop ^{\\theta_0, \\theta_1}}  {J(\\theta_0, \\theta_1) \\atop}';
 
 export const chartLayout = {
-  width: 400,
+  width: 500,
   height: 400,
   title: 'Scatter plot of training data',
   xaxis: {
@@ -20,5 +20,9 @@ export const chartLayout = {
     titlefont: {
       size: 13
     }
+  },
+  legend: {
+    x: 0.3,
+    y: 1.2
   }
 };

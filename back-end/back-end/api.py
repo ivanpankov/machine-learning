@@ -60,6 +60,16 @@ def hypothesis():
     hypo = compute_hypothesis(X, theta)
     return jsonify(hypo)
 
+@app.route('/cost-surface', methods=['POST'])
+def const_surface():
+    request_data = request.get_json()
+    # theta = np.array(request_data['theta'])
+    # x = np.array(request_data['x'])
+    # ones = np.ones(x.shape[0]).reshape(-1, 1)
+    # X = np.column_stack((ones, x))
+    # hypo = compute_hypothesis(X, theta)
+    return jsonify({'blah': 23})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
