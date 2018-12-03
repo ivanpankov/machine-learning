@@ -8,15 +8,15 @@ export const texGoal =
 export const chartLayout = {
   width: 400,
   height: 400,
-  title: "Scatter plot of training data",
+  title: 'Scatter plot of training data',
   xaxis: {
-    title: "Population of City in 10,000s (x)",
+    title: 'Population of City in 10,000s (x)',
     titlefont: {
       size: 13
     }
   },
   yaxis: {
-    title: "Profit in $10,000s (y)",
+    title: 'Profit in $10,000s (y)',
     titlefont: {
       size: 13
     }

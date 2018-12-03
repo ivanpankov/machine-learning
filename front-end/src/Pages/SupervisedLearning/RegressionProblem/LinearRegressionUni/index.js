@@ -13,6 +13,7 @@ import { getDataByFile } from '../../../../services/ml';
 import DataTable from './DataTable';
 import DataChart from './DataChart';
 import { withMessages } from '../../../../providers/Messages';
+import FontAwesomeIcon from '../../../../Components/FontAwesomeIcon';
 
 import './styles.scss';
 
@@ -23,8 +24,8 @@ const INITIAL_THETA = [[0], [0]];
 class LinearRegressionUni extends Component {
   state = {
     data: { status: serviceStatus.OK, error: {}, x: [], y: [] },
-    theta: { status: serviceStatus.OK, error: {}, value: INITIAL_THETA },
-    hypothesis: { status: serviceStatus.LOADING, error: {}, value: [[]] }
+    theta: { status: serviceStatus.OK, error: {}, value: INITIAL_THETA, valid: true },
+    hypothesis: { status: serviceStatus.OK, error: {}, value: [[]] }
   };
 
   async componentDidMount() {
@@ -57,11 +58,14 @@ class LinearRegressionUni extends Component {
     }
   }
 
-  computeHypothesis = async theta => {
+  computeHypothesis = async () => {
     this.setState({
       hypothesis: { status: serviceStatus.LOADING, error: {}, value: [[]] }
     });
 
+    let theta = this.state.theta.value;
+    // parse string to number
+    theta = [[+theta[0][0]], [+theta[1][0]]]
     const { x } = this.state.data;
     const response = await hypothesis(x, theta);
 
@@ -86,7 +90,7 @@ class LinearRegressionUni extends Component {
 
   computeTheta = async () => {
     this.setState({
-      theta: { status: serviceStatus.LOADING, error: {}, value: INITIAL_THETA }
+      theta: { status: serviceStatus.LOADING, error: {}, value: INITIAL_THETA, valid: true }
     });
 
     const { x, y } = this.state.data;
@@ -111,21 +115,40 @@ class LinearRegressionUni extends Component {
         theta: {
           status: serviceStatus.OK,
           error: {},
-          value: response
+          value: [[response[0][0].toFixed(3)], [response[1][0].toFixed(3)]]
         }
       });
-
-      this.computeHypothesis(response);
     }
+  };
+
+  onThetaChange = event => {
+    const prevTheta = this.state.theta.value;
+    let newTheta;
+    switch (event.target.dataset.theta) {
+      case 'zero':
+        newTheta = [[event.target.value], prevTheta[1]];
+        break;
+
+      case 'one':
+        newTheta = [prevTheta[0], [event.target.value]];
+        break;
+
+      default:
+        newTheta = prevTheta;
+    }
+
+    const valid =
+      !Number.isNaN(newTheta[[0][0]]) && !Number.isNaN(newTheta[[1][0]]);
+
+    this.setState({ theta: { ...this.state.theta, value: newTheta, valid } });
   };
 
   render() {
     const { data } = this.state;
     const count = data.y.length;
-    const theta0 = this.state.theta.value[0][0].toFixed(3);
-    const theta1 = this.state.theta.value[1][0].toFixed(3);
-    const hypoFormula = `${texHypothesis} = ${theta0} + ${theta1}x`;
-    console.log(this.props.messages);
+    const theta0 = this.state.theta.value[0][0];
+    const theta1 = this.state.theta.value[1][0];
+
     return (
       <MathJax.Provider>
         <div className="container">
@@ -198,19 +221,59 @@ class LinearRegressionUni extends Component {
             </div>
             <div className="col">
               <div>
-                {this.state.theta.status === serviceStatus.OK ? (
-                  <MathJax.Node
-                    formula={hypoFormula}
-                    className="d-inline-block"
-                  />
-                ) : (
-                  <span>Calculating ...</span>
-                )}
+                <MathJax.Node
+                  formula={texHypothesis + '='}
+                  className="d-inline-block"
+                />
+                <input
+                  type="text"
+                  value={theta0}
+                  className="ml-1 formula-input"
+                  size={String(theta0).length}
+                  onChange={this.onThetaChange}
+                  data-theta="zero"
+                />
+                <span className="m-1">+</span>
+                <input
+                  type="text"
+                  value={theta1}
+                  className="formula-input"
+                  size={String(theta1).length}
+                  onChange={this.onThetaChange}
+                  data-theta="one"
+                />
+                <MathJax.Node formula={'x'} className="d-inline-block" />
               </div>
 
               <div>
-                <button onClick={this.computeTheta}>
+                <button
+                  onClick={this.computeTheta}
+                  className="btn btn-outline-secondary d-block"
+                >
+                  <FontAwesomeIcon
+                    icon="spinner"
+                    className={`mr-2 ${
+                      this.state.theta.status === serviceStatus.LOADING
+                        ? 'fa-spin '
+                        : ''
+                    }`}
+                  />
                   Compute thetas with Gradient Descent
+                </button>
+
+                <button
+                  onClick={this.computeHypothesis}
+                  className="btn btn-outline-secondary d-block mt-1"
+                >
+                  <FontAwesomeIcon
+                    icon="spinner"
+                    className={`mr-2 ${
+                      this.state.hypothesis.status === serviceStatus.LOADING
+                        ? 'fa-spin '
+                        : ''
+                    }`}
+                  />
+                  Compute Hypothesis
                 </button>
               </div>
             </div>

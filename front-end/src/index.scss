@@ -1,7 +1,6 @@
-@import "./variables";
+@import './variables';
 $font-size-base: 0.8rem;
-@import "../node_modules/bootstrap-scss/bootstrap";
-
+@import '../node_modules/bootstrap-scss/bootstrap';
 
 #root {
   position: absolute;
@@ -13,3 +12,8 @@ $font-size-base: 0.8rem;
   flex-direction: column;
 }
 
+.formula-input {
+  text-align: center;
+  border: 1px solid #eee;
+  min-width: 16px;
+}
