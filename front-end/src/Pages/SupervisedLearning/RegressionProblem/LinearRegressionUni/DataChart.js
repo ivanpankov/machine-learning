@@ -1,7 +1,28 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Plot from 'react-plotly.js';
-import { chartLayout } from './constants';
+
+const chartLayout = {
+  width: 500,
+  height: 400,
+  title: 'Scatter plot of training data',
+  xaxis: {
+    title: 'Population of City in 10,000s (x)',
+    titlefont: {
+      size: 13
+    }
+  },
+  yaxis: {
+    title: 'Profit in $10,000s (y)',
+    titlefont: {
+      size: 13
+    }
+  },
+  legend: {
+    x: 0.3,
+    y: 1.2
+  }
+};
 
 export default class DataChart extends PureComponent {
   static propTypes = {

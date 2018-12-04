@@ -87,9 +87,9 @@ export const hypothesis = async (x, theta) => {
   });
 };
 
-export const constFunctionSurface = async () => {
+export const constFunctionSurface = async (x, y) => {
   return request('/api/cost-surface', null, {
     method: 'POST',
-    data: {  }
+    data: { x, y }
   });
 };

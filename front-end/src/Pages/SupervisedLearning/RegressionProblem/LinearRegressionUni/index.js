@@ -16,6 +16,7 @@ import {
 import { getDataByFile } from '../../../../services/ml';
 import DataTable from './DataTable';
 import DataChart from './DataChart';
+import SurfaceChart from './SurfaceChart';
 import { withMessages } from '../../../../providers/Messages';
 import FontAwesomeIcon from '../../../../Components/FontAwesomeIcon';
 
@@ -36,7 +37,11 @@ class LinearRegressionUni extends Component {
       valid: true
     },
     hypothesis: { status: serviceStatus.OK, error: {}, value: [[]] },
-    costSurface: { status: serviceStatus.OK, error: {}, value: [[]] }
+    costSurface: {
+      status: serviceStatus.OK,
+      error: {},
+      value: { J: [[0]], theta0: [[0]], theta1: [[0]] }
+    }
   };
 
   async componentDidMount() {
@@ -141,19 +146,18 @@ class LinearRegressionUni extends Component {
 
   constFunctionSurface = async () => {
     this.setState({
-      costSurface: { status: serviceStatus.LOADING, error: {} }
+      costSurface: { status: serviceStatus.LOADING, error: {}, value: { J: [[0]], theta0: [[0]], theta1: [[0]] } }
     });
 
-    const response = await constFunctionSurface();
-
-    console.log(response);
+    const { x, y } = this.state.data;
+    const response = await constFunctionSurface(x, y);
 
     if (response instanceof Error) {
       this.setState({
         costSurface: {
           status: serviceStatus.ERROR,
           error: response,
-          value: [[]]
+          value: { J: [[0]], theta0: [[0]], theta1: [[0]] }
         }
       });
     } else {
@@ -161,7 +165,7 @@ class LinearRegressionUni extends Component {
         costSurface: {
           status: serviceStatus.OK,
           error: {},
-          value: [[]]
+          value: response
         }
       });
     }
@@ -274,27 +278,7 @@ class LinearRegressionUni extends Component {
             </div>
           </div>
           <div className="row">
-            <div className="col">
-              <DataChart data={data} hypo={this.state.hypothesis} />
-              <div className="text-center">
-                <button
-                  onClick={this.computeHypothesis}
-                  className="btn btn-primary btn-sm d-inline-block mb-2"
-                  disabled={!this.state.theta.valid}
-                >
-                  <FontAwesomeIcon
-                    icon="spinner"
-                    className={`mr-2 ${
-                      this.state.hypothesis.status === serviceStatus.LOADING
-                        ? 'fa-spin '
-                        : ''
-                    }`}
-                  />
-                  Compute Hypothesis
-                </button>
-              </div>
-            </div>
-            <div className="col">
+            <div className="col text-center">
               <div>
                 <MathJax.Node
                   formula={texHypothesis + '='}
@@ -323,7 +307,7 @@ class LinearRegressionUni extends Component {
               <div>
                 <button
                   onClick={this.computeTheta}
-                  className="btn btn-primary d-block btn-sm"
+                  className="btn btn-primary d-inline-block btn-sm"
                 >
                   <FontAwesomeIcon
                     icon="spinner"
@@ -335,10 +319,38 @@ class LinearRegressionUni extends Component {
                   />
                   Compute thetas with Gradient Descent
                 </button>
-
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col text-center">
+              <DataChart data={data} hypo={this.state.hypothesis} />
+              <div className="text-center">
+                <button
+                  onClick={this.computeHypothesis}
+                  className="btn btn-primary btn-sm d-inline-block mb-2"
+                  disabled={!this.state.theta.valid}
+                >
+                  <FontAwesomeIcon
+                    icon="spinner"
+                    className={`mr-2 ${
+                      this.state.hypothesis.status === serviceStatus.LOADING
+                        ? 'fa-spin '
+                        : ''
+                    }`}
+                  />
+                  Compute Hypothesis
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col text-center">
+              <SurfaceChart data={this.state.costSurface.value} />
+              <div>
                 <button
                   onClick={this.constFunctionSurface}
-                  className="btn btn-primary d-block mt-1 btn-sm"
+                  className="btn btn-primary d-inline-block mt-1 btn-sm"
                 >
                   <FontAwesomeIcon
                     icon="spinner"
@@ -353,7 +365,6 @@ class LinearRegressionUni extends Component {
               </div>
             </div>
           </div>
-          <div className="row">next</div>
         </div>
       </MathJax.Provider>
     );
