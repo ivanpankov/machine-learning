@@ -10,9 +10,10 @@ app = Flask(__name__)
 @app.route('/file', methods=['GET'])
 def get_file():
     file_path = request.args.get('file')
-    x, y = np.loadtxt(get_file_path('../data/{}'.format(file_path)), delimiter=',', unpack=True)
-    x = x.reshape(-1,1).tolist()
-    y = y.reshape(-1,1).tolist()
+    x, y = np.loadtxt(get_file_path(
+        '../data/{}'.format(file_path)), delimiter=',', unpack=True)
+    x = x.reshape(-1, 1).tolist()
+    y = y.reshape(-1, 1).tolist()
     return jsonify({'x': x, 'y': y})
 
 
@@ -59,6 +60,27 @@ def hypothesis():
     X = np.column_stack((ones, x))
     hypo = compute_hypothesis(X, theta)
     return jsonify(hypo)
+
+
+@app.route('/cost-surface', methods=['POST'])
+def const_surface():
+    request_data = request.get_json()
+    x = np.array(request_data['x'])
+    ones = np.ones(x.shape[0]).reshape(-1, 1)
+    X = np.column_stack((ones, x))
+    y = np.array(request_data['y'])
+
+    theta0_vals = np.linspace(-10, 10, num=100)
+    theta1_vals = np.linspace(-1, 4, num=100)
+
+    J_vals = np.zeros((theta0_vals.size, theta1_vals.size))
+
+    for i in range(0, theta0_vals.size):
+        for j in range(0, theta1_vals.size):
+            theta = [[theta0_vals[i]], [theta1_vals[j]]]
+            J_vals[i,j] = compute_cost(X, y, theta)
+
+    return jsonify({'J': J_vals.T.tolist(), 'theta0': theta0_vals.tolist(), 'theta1': theta1_vals.tolist()})
 
 
 if __name__ == '__main__':

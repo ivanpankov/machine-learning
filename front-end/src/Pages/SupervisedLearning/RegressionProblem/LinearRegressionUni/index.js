@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import MathJax from 'react-mathjax';
-import { gradientDescentUni, hypothesis } from '../../../../services/ml';
+import {
+  gradientDescentUni,
+  hypothesis,
+  constFunctionSurface
+} from '../../../../services/ml';
 import serviceStatus from '../../../../services/serviceStatus';
 import {
   texHypothesis,
@@ -12,6 +16,7 @@ import {
 import { getDataByFile } from '../../../../services/ml';
 import DataTable from './DataTable';
 import DataChart from './DataChart';
+import SurfaceChart from './SurfaceChart';
 import { withMessages } from '../../../../providers/Messages';
 import FontAwesomeIcon from '../../../../Components/FontAwesomeIcon';
 
@@ -20,12 +25,23 @@ import './styles.scss';
 const ALPHA = 0.01;
 const NUMBER_OF_ITERATIONS = 1500;
 const INITIAL_THETA = [[0], [0]];
+const reg = new RegExp(/^-?\d*(\.\d+)?$/);
 
 class LinearRegressionUni extends Component {
   state = {
     data: { status: serviceStatus.OK, error: {}, x: [], y: [] },
-    theta: { status: serviceStatus.OK, error: {}, value: INITIAL_THETA, valid: true },
-    hypothesis: { status: serviceStatus.OK, error: {}, value: [[]] }
+    theta: {
+      status: serviceStatus.OK,
+      error: {},
+      value: INITIAL_THETA,
+      valid: true
+    },
+    hypothesis: { status: serviceStatus.OK, error: {}, value: [[]] },
+    costSurface: {
+      status: serviceStatus.OK,
+      error: {},
+      value: { J: [[0]], theta0: [[0]], theta1: [[0]] }
+    }
   };
 
   async componentDidMount() {
@@ -65,7 +81,7 @@ class LinearRegressionUni extends Component {
 
     let theta = this.state.theta.value;
     // parse string to number
-    theta = [[+theta[0][0]], [+theta[1][0]]]
+    theta = [[+theta[0][0]], [+theta[1][0]]];
     const { x } = this.state.data;
     const response = await hypothesis(x, theta);
 
@@ -90,7 +106,12 @@ class LinearRegressionUni extends Component {
 
   computeTheta = async () => {
     this.setState({
-      theta: { status: serviceStatus.LOADING, error: {}, value: INITIAL_THETA, valid: true }
+      theta: {
+        status: serviceStatus.LOADING,
+        error: {},
+        value: INITIAL_THETA,
+        valid: true
+      }
     });
 
     const { x, y } = this.state.data;
@@ -107,7 +128,8 @@ class LinearRegressionUni extends Component {
         theta: {
           status: serviceStatus.ERROR,
           error: response,
-          value: INITIAL_THETA
+          value: INITIAL_THETA,
+          valid: false
         }
       });
     } else {
@@ -115,10 +137,47 @@ class LinearRegressionUni extends Component {
         theta: {
           status: serviceStatus.OK,
           error: {},
-          value: [[response[0][0].toFixed(3)], [response[1][0].toFixed(3)]]
+          value: [[response[0][0].toFixed(3)], [response[1][0].toFixed(3)]],
+          valid: true
         }
       });
     }
+  };
+
+  constFunctionSurface = async () => {
+    this.setState({
+      costSurface: { status: serviceStatus.LOADING, error: {}, value: { J: [[0]], theta0: [[0]], theta1: [[0]] } }
+    });
+
+    const { x, y } = this.state.data;
+    const response = await constFunctionSurface(x, y);
+
+    if (response instanceof Error) {
+      this.setState({
+        costSurface: {
+          status: serviceStatus.ERROR,
+          error: response,
+          value: { J: [[0]], theta0: [[0]], theta1: [[0]] }
+        }
+      });
+    } else {
+      this.setState({
+        costSurface: {
+          status: serviceStatus.OK,
+          error: {},
+          value: response
+        }
+      });
+    }
+  };
+
+  isThetaValid = theta => {
+    const theta0 = String(theta[0][0]);
+    const theta1 = String(theta[1][0]);
+
+    return (
+      theta0.length && theta1.length && reg.test(theta0) && reg.test(theta1)
+    );
   };
 
   onThetaChange = event => {
@@ -137,10 +196,13 @@ class LinearRegressionUni extends Component {
         newTheta = prevTheta;
     }
 
-    const valid =
-      !Number.isNaN(newTheta[[0][0]]) && !Number.isNaN(newTheta[[1][0]]);
-
-    this.setState({ theta: { ...this.state.theta, value: newTheta, valid } });
+    this.setState({
+      theta: {
+        ...this.state.theta,
+        value: newTheta,
+        valid: this.isThetaValid(newTheta)
+      }
+    });
   };
 
   render() {
@@ -216,10 +278,7 @@ class LinearRegressionUni extends Component {
             </div>
           </div>
           <div className="row">
-            <div className="col">
-              <DataChart data={data} hypo={this.state.hypothesis} />
-            </div>
-            <div className="col">
+            <div className="col text-center">
               <div>
                 <MathJax.Node
                   formula={texHypothesis + '='}
@@ -229,7 +288,7 @@ class LinearRegressionUni extends Component {
                   type="text"
                   value={theta0}
                   className="ml-1 formula-input"
-                  size={String(theta0).length}
+                  size={String(theta0).length || 1}
                   onChange={this.onThetaChange}
                   data-theta="zero"
                 />
@@ -238,7 +297,7 @@ class LinearRegressionUni extends Component {
                   type="text"
                   value={theta1}
                   className="formula-input"
-                  size={String(theta1).length}
+                  size={String(theta1).length || 1}
                   onChange={this.onThetaChange}
                   data-theta="one"
                 />
@@ -248,7 +307,7 @@ class LinearRegressionUni extends Component {
               <div>
                 <button
                   onClick={this.computeTheta}
-                  className="btn btn-outline-secondary d-block"
+                  className="btn btn-primary d-inline-block btn-sm"
                 >
                   <FontAwesomeIcon
                     icon="spinner"
@@ -260,10 +319,17 @@ class LinearRegressionUni extends Component {
                   />
                   Compute thetas with Gradient Descent
                 </button>
-
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col text-center">
+              <DataChart data={data} hypo={this.state.hypothesis} />
+              <div className="text-center">
                 <button
                   onClick={this.computeHypothesis}
-                  className="btn btn-outline-secondary d-block mt-1"
+                  className="btn btn-primary btn-sm d-inline-block mb-2"
+                  disabled={!this.state.theta.valid}
                 >
                   <FontAwesomeIcon
                     icon="spinner"
@@ -278,7 +344,27 @@ class LinearRegressionUni extends Component {
               </div>
             </div>
           </div>
-          <div className="row">next</div>
+          <div className="row">
+            <div className="col text-center">
+              <SurfaceChart data={this.state.costSurface.value} />
+              <div>
+                <button
+                  onClick={this.constFunctionSurface}
+                  className="btn btn-primary d-inline-block mt-1 btn-sm"
+                >
+                  <FontAwesomeIcon
+                    icon="spinner"
+                    className={`mr-2 ${
+                      this.state.costSurface.status === serviceStatus.LOADING
+                        ? 'fa-spin '
+                        : ''
+                    }`}
+                  />
+                  Compute Cost function surface
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </MathJax.Provider>
     );
