@@ -5,6 +5,7 @@ import Supervised from '../../Pages/SupervisedLearning';
 import Unsupervised from '../../Pages/UnsupervisedLearning';
 import Reinforcement from '../../Pages/ReinforcementLearning';
 import Recommender from '../../Pages/RecommenderSystem';
+import MathJax from 'react-mathjax';
 
 export default class Main extends Component {
   static propTypes = {
@@ -17,14 +18,16 @@ export default class Main extends Component {
 
   render() {
     return (
-      <main className={this.props.className}>
-        <div className="container">
-          <Route path="/supervised" component={Supervised} />
-          <Route path="/unsupervised" component={Unsupervised} />
-          <Route path="/reinforcement" component={Reinforcement} />
-          <Route path="/recommender" component={Recommender} />
-        </div>
-      </main>
+      <MathJax.Provider>
+        <main className={this.props.className}>
+          <div className="container">
+            <Route path="/supervised" component={Supervised} />
+            <Route path="/unsupervised" component={Unsupervised} />
+            <Route path="/reinforcement" component={Reinforcement} />
+            <Route path="/recommender" component={Recommender} />
+          </div>
+        </main>
+      </MathJax.Provider>
     );
   }
 }

@@ -10,10 +10,15 @@ app = Flask(__name__)
 @app.route('/file', methods=['GET'])
 def get_file():
     file_path = request.args.get('file')
-    x, y = np.loadtxt(get_file_path(
+    num_of_cols = int(request.args.get('num_of_cols'))
+    data = np.loadtxt(get_file_path(
         '../data/{}'.format(file_path)), delimiter=',', unpack=True)
-    x = x.reshape(-1, 1).tolist()
-    y = y.reshape(-1, 1).tolist()
+
+    if (num_of_cols < 3):
+        x = data[1, :].reshape(-1, 1).tolist()
+    x = data[0:num_of_cols - 1, :].T.tolist()
+    y = data[num_of_cols - 1, :].reshape(-1, 1).tolist()
+
     return jsonify({'x': x, 'y': y})
 
 
@@ -78,7 +83,7 @@ def const_surface():
     for i in range(0, theta0_vals.size):
         for j in range(0, theta1_vals.size):
             theta = [[theta0_vals[i]], [theta1_vals[j]]]
-            J_vals[i,j] = compute_cost(X, y, theta)
+            J_vals[i, j] = compute_cost(X, y, theta)
 
     return jsonify({'J': J_vals.T.tolist(), 'theta0': theta0_vals.tolist(), 'theta1': theta1_vals.tolist()})
 

@@ -56,8 +56,8 @@ export async function request(
  *
  * @param {string} fileUrl path to .csv file
  */
-export const getDataByFile = async filePath => {
-  return request(`${BASE_URL}/file`, { file: filePath });
+export const getDataByFile = async (filePath, numOfCols) => {
+  return request(`${BASE_URL}/file`, { file: filePath, num_of_cols: numOfCols });
 };
 
 // data, theta, alpha, maxIters

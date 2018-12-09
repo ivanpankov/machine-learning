@@ -49,7 +49,7 @@ class LinearRegressionUni extends Component {
       data: { status: serviceStatus.LOADING, error: {}, x: [], y: [] }
     });
 
-    const response = await getDataByFile('ex1data1.txt');
+    const response = await getDataByFile('ex1data1.txt', 2);
 
     if (response instanceof Error) {
       const { messages } = this.props;
@@ -146,7 +146,11 @@ class LinearRegressionUni extends Component {
 
   constFunctionSurface = async () => {
     this.setState({
-      costSurface: { status: serviceStatus.LOADING, error: {}, value: { J: [[0]], theta0: [[0]], theta1: [[0]] } }
+      costSurface: {
+        status: serviceStatus.LOADING,
+        error: {},
+        value: { J: [[0]], theta0: [[0]], theta1: [[0]] }
+      }
     });
 
     const { x, y } = this.state.data;
@@ -212,161 +216,159 @@ class LinearRegressionUni extends Component {
     const theta1 = this.state.theta.value[1][0];
 
     return (
-      <MathJax.Provider>
-        <div className="container">
-          <div className="row">
-            <div className="col pb-3">
-              <h1>Linear regression</h1>
-              <p>
-                <strong>Univariable linear regression</strong>
-              </p>
-              <hr />
-            </div>
+      <div className="container">
+        <div className="row">
+          <div className="col pb-3">
+            <h1>Linear regression</h1>
+            <p>
+              <strong>Univariable linear regression</strong>
+            </p>
+            <hr />
           </div>
-          <div className="row">
-            <div className="col pb-3">
-              <p>
-                <strong>m</strong>
-                {` = ${count} = Number of training examples`}
-              </p>
-              <p>
-                <strong>x</strong>`s{` = input variable (features)`}
-              </p>
-              <p>
-                <strong>y</strong>`s{` = output variable (target)`}
-              </p>
-              <p>
-                (x<sup>(i)</sup>, y<sup>(i)</sup>) -{' '}
-                <strong>
-                  i<sup>th</sup>
-                </strong>{' '}
-                training example
-              </p>
+        </div>
+        <div className="row">
+          <div className="col pb-3">
+            <p>
+              <strong>m</strong>
+              {` = ${count} = Number of training examples`}
+            </p>
+            <p>
+              <strong>x</strong>`s{` = input variable (features)`}
+            </p>
+            <p>
+              <strong>y</strong>`s{` = output variable (target)`}
+            </p>
+            <p>
+              (x<sup>(i)</sup>, y<sup>(i)</sup>) -{' '}
+              <strong>
+                i<sup>th</sup>
+              </strong>{' '}
+              training example
+            </p>
 
-              <div>
-                <span>Hypothesis:</span>
-                <MathJax.Node
-                  formula={texHypothesis}
-                  className="d-inline-block pl-3"
-                />
-              </div>
-              <div>
-                <span>Paramaters:</span>
-                <MathJax.Node
-                  formula={texParameters}
-                  className="d-inline-block pl-3"
-                />
-              </div>
-              <div>
-                <span>Cost Function:</span>
-                <MathJax.Node
-                  formula={texCostFunction}
-                  className="d-inline-block pl-3"
-                />
-              </div>
-              <div>
-                <span>Goal:</span>
-                <MathJax.Node
-                  formula={texGoal}
-                  className="d-inline-block pl-3"
-                  style={{ position: 'relative', top: '10px' }}
-                />
-              </div>
+            <div>
+              <span>Hypothesis:</span>
+              <MathJax.Node
+                formula={texHypothesis}
+                className="d-inline-block pl-3"
+              />
             </div>
-            <div className="col">
-              <DataTable {...data} />
+            <div>
+              <span>Paramaters:</span>
+              <MathJax.Node
+                formula={texParameters}
+                className="d-inline-block pl-3"
+              />
+            </div>
+            <div>
+              <span>Cost Function:</span>
+              <MathJax.Node
+                formula={texCostFunction}
+                className="d-inline-block pl-3"
+              />
+            </div>
+            <div>
+              <span>Goal:</span>
+              <MathJax.Node
+                formula={texGoal}
+                className="d-inline-block pl-3"
+                style={{ position: 'relative', top: '10px' }}
+              />
             </div>
           </div>
-          <div className="row">
-            <div className="col text-center">
-              <div>
-                <MathJax.Node
-                  formula={texHypothesis + '='}
-                  className="d-inline-block"
-                />
-                <input
-                  type="text"
-                  value={theta0}
-                  className="ml-1 formula-input"
-                  size={String(theta0).length || 1}
-                  onChange={this.onThetaChange}
-                  data-theta="zero"
-                />
-                <span className="m-1">+</span>
-                <input
-                  type="text"
-                  value={theta1}
-                  className="formula-input"
-                  size={String(theta1).length || 1}
-                  onChange={this.onThetaChange}
-                  data-theta="one"
-                />
-                <MathJax.Node formula={'x'} className="d-inline-block" />
-              </div>
+          <div className="col">
+            <DataTable {...data} />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col text-center">
+            <div>
+              <MathJax.Node
+                formula={texHypothesis + '='}
+                className="d-inline-block"
+              />
+              <input
+                type="text"
+                value={theta0}
+                className="ml-1 formula-input"
+                size={String(theta0).length || 1}
+                onChange={this.onThetaChange}
+                data-theta="zero"
+              />
+              <span className="m-1">+</span>
+              <input
+                type="text"
+                value={theta1}
+                className="formula-input"
+                size={String(theta1).length || 1}
+                onChange={this.onThetaChange}
+                data-theta="one"
+              />
+              <MathJax.Node formula={'x'} className="d-inline-block" />
+            </div>
 
-              <div>
-                <button
-                  onClick={this.computeTheta}
-                  className="btn btn-primary d-inline-block btn-sm"
-                >
-                  <FontAwesomeIcon
-                    icon="spinner"
-                    className={`mr-2 ${
-                      this.state.theta.status === serviceStatus.LOADING
-                        ? 'fa-spin '
-                        : ''
-                    }`}
-                  />
-                  Compute thetas with Gradient Descent
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col text-center">
-              <DataChart data={data} hypo={this.state.hypothesis} />
-              <div className="text-center">
-                <button
-                  onClick={this.computeHypothesis}
-                  className="btn btn-primary btn-sm d-inline-block mb-2"
-                  disabled={!this.state.theta.valid}
-                >
-                  <FontAwesomeIcon
-                    icon="spinner"
-                    className={`mr-2 ${
-                      this.state.hypothesis.status === serviceStatus.LOADING
-                        ? 'fa-spin '
-                        : ''
-                    }`}
-                  />
-                  Compute Hypothesis
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col text-center">
-              <SurfaceChart data={this.state.costSurface.value} />
-              <div>
-                <button
-                  onClick={this.constFunctionSurface}
-                  className="btn btn-primary d-inline-block mt-1 btn-sm"
-                >
-                  <FontAwesomeIcon
-                    icon="spinner"
-                    className={`mr-2 ${
-                      this.state.costSurface.status === serviceStatus.LOADING
-                        ? 'fa-spin '
-                        : ''
-                    }`}
-                  />
-                  Compute Cost function surface
-                </button>
-              </div>
+            <div>
+              <button
+                onClick={this.computeTheta}
+                className="btn btn-primary d-inline-block btn-sm"
+              >
+                <FontAwesomeIcon
+                  icon="spinner"
+                  className={`mr-2 ${
+                    this.state.theta.status === serviceStatus.LOADING
+                      ? 'fa-spin '
+                      : ''
+                  }`}
+                />
+                Compute thetas with Gradient Descent
+              </button>
             </div>
           </div>
         </div>
-      </MathJax.Provider>
+        <div className="row">
+          <div className="col text-center">
+            <DataChart data={data} hypo={this.state.hypothesis} />
+            <div className="text-center">
+              <button
+                onClick={this.computeHypothesis}
+                className="btn btn-primary btn-sm d-inline-block mb-2"
+                disabled={!this.state.theta.valid}
+              >
+                <FontAwesomeIcon
+                  icon="spinner"
+                  className={`mr-2 ${
+                    this.state.hypothesis.status === serviceStatus.LOADING
+                      ? 'fa-spin '
+                      : ''
+                  }`}
+                />
+                Compute Hypothesis
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="row p-3">
+          <div className="col text-center">
+            <SurfaceChart data={this.state.costSurface.value} />
+            <div>
+              <button
+                onClick={this.constFunctionSurface}
+                className="btn btn-primary d-inline-block mt-1 btn-sm"
+              >
+                <FontAwesomeIcon
+                  icon="spinner"
+                  className={`mr-2 ${
+                    this.state.costSurface.status === serviceStatus.LOADING
+                      ? 'fa-spin '
+                      : ''
+                  }`}
+                />
+                Compute Cost function surface
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 }

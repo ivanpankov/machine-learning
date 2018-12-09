@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import Plot from 'react-plotly.js';
 
 const chartLayout = {
   title: 'Cost function J(θ)',
   scene: {
-    camera: { 
+    camera: {
       eye: { x: -1.4, y: -1.4, z: 0.1 }
     },
     aspectratio: {
@@ -24,7 +24,7 @@ const chartLayout = {
       title: 'θ1'
     },
     zaxis: {
-      nticks: 10,
+      nticks: 15,
       range: [-200, 800],
       title: 'J(θ)'
     }
@@ -55,8 +55,10 @@ export default class SurfaceChart extends PureComponent {
             highlightcolor: '#42f462',
             project: { z: true },
             width: 1,
-            size: 0.5,
           }
+        },
+        colorbar: {
+          thickness: 5
         }
       }
     ];
