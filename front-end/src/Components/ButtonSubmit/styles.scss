@@ -1,0 +1,11 @@
+button {
+  svg.fa-spinner {
+    opacity: 0;
+    position: relative;
+    left: -0.3rem;
+
+    &.fa-spin {
+      opacity: 1;
+    }
+  }
+}

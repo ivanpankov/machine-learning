@@ -26,18 +26,20 @@ class Row extends PureComponent {
 export default class DataTable extends PureComponent {
   static propTypes = {
     x: PropTypes.array,
-    y: PropTypes.array
+    y: PropTypes.array,
+    className: PropTypes.string
   };
 
   static defaultProps = {
     x: [],
-    y: []
+    y: [],
+    className: ''
   };
 
   render() {
     const { x, y } = this.props;
     return (
-      <table className="table table-bordered">
+      <table className={`table table-bordered ${this.props.className}`}>
         <thead>
           <tr>
             <th scope="col">(X<sub>1</sub>) Size of house in feet<sup>2</sup></th>

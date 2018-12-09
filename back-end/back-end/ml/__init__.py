@@ -1,7 +1,9 @@
 import numpy as np
 
+
 def compute_hypothesis(X, theta):
     return (X@theta).tolist()
+
 
 def compute_cost(X, y, theta):
     m = len(y)
@@ -24,3 +26,27 @@ def gradient_descent(X, y, theta, alpha, num_iters):
         # J_history[i, 0] = compute_cost(X, y, theta)
 
     return theta.tolist()
+
+
+def mean_by_columns(x):
+    return (x.sum(axis=0) / np.size(x, axis=0))
+
+# # https://en.wikipedia.org/wiki/Standard_deviation
+# ddof=1 (Delta Degrees of Freedom) for simple standard deviation
+# otherwise numpy will calculate population std
+
+
+def std_by_columns(x):
+    return np.std(x, ddof=1, axis=0)
+
+
+def feature_normalization(x):
+    mean = mean_by_columns(x)
+    sigma = std_by_columns(x)
+    n = np.size(x, axis=1)
+    x_norm = np.empty_like(x, dtype=float)
+
+    for i in range(0, n):
+        x_norm[:, i] = (x[:, i] - mean[i]) / sigma[i]
+
+    return x_norm

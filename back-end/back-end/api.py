@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, jsonify
 import numpy as np
 from utils import csv_file_to_json, get_file_path
-from ml import compute_cost, gradient_descent, compute_hypothesis
+from ml import compute_cost, gradient_descent, compute_hypothesis, feature_normalization
 
 app = Flask(__name__)
 
@@ -21,7 +21,9 @@ def get_file():
 
     return jsonify({'x': x, 'y': y})
 
-# TODO: 
+# TODO:
+
+
 @app.route('/compute_cost', methods=['POST'])
 def cost_func():
     # request_data = request.get_json()
@@ -88,8 +90,9 @@ def const_surface():
 def normalize_features():
     request_data = request.get_json()
     x = np.array(request_data['x'])
+    x_norm = feature_normalization(x)
 
-    return jsonify(x.tolist())
+    return jsonify(x_norm.tolist())
 
 
 if __name__ == '__main__':

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
 import MathJax from 'react-mathjax';
 import {
   gradientDescentUni,
@@ -19,6 +18,7 @@ import DataChart from './DataChart';
 import SurfaceChart from './SurfaceChart';
 import { withMessages } from '../../../../providers/Messages';
 import FontAwesomeIcon from '../../../../Components/FontAwesomeIcon';
+import ButtonSubmit from '../../../../Components/ButtonSubmit';
 
 import './styles.scss';
 
@@ -219,15 +219,15 @@ class LinearRegressionUni extends Component {
       <div className="container">
         <div className="row">
           <div className="col pb-3">
-            <h1>Linear regression</h1>
+            <h1>Linear regression with one variable</h1>
             <p>
-              <strong>Univariable linear regression</strong>
+              <strong>Univariate linear regression</strong>
             </p>
             <hr />
           </div>
         </div>
         <div className="row">
-          <div className="col pb-3">
+          <div className="col mb-3">
             <p>
               <strong>m</strong>
               {` = ${count} = Number of training examples`}
@@ -276,6 +276,8 @@ class LinearRegressionUni extends Component {
               />
             </div>
           </div>
+        </div>
+        <div className="row">
           <div className="col">
             <DataTable {...data} />
           </div>
@@ -308,20 +310,13 @@ class LinearRegressionUni extends Component {
             </div>
 
             <div>
-              <button
+              <ButtonSubmit
                 onClick={this.computeTheta}
-                className="btn btn-primary d-inline-block btn-sm"
+                className="d-inline-block"
+                spin={this.state.theta.status === serviceStatus.LOADING}
               >
-                <FontAwesomeIcon
-                  icon="spinner"
-                  className={`mr-2 ${
-                    this.state.theta.status === serviceStatus.LOADING
-                      ? 'fa-spin '
-                      : ''
-                  }`}
-                />
                 Compute thetas with Gradient Descent
-              </button>
+              </ButtonSubmit>
             </div>
           </div>
         </div>
@@ -329,21 +324,14 @@ class LinearRegressionUni extends Component {
           <div className="col text-center">
             <DataChart data={data} hypo={this.state.hypothesis} />
             <div className="text-center">
-              <button
+              <ButtonSubmit
                 onClick={this.computeHypothesis}
-                className="btn btn-primary btn-sm d-inline-block mb-2"
+                className="d-inline-block mb-2"
                 disabled={!this.state.theta.valid}
+                spin={this.state.hypothesis.status === serviceStatus.LOADING}
               >
-                <FontAwesomeIcon
-                  icon="spinner"
-                  className={`mr-2 ${
-                    this.state.hypothesis.status === serviceStatus.LOADING
-                      ? 'fa-spin '
-                      : ''
-                  }`}
-                />
                 Compute Hypothesis
-              </button>
+              </ButtonSubmit>
             </div>
           </div>
         </div>
@@ -351,20 +339,12 @@ class LinearRegressionUni extends Component {
           <div className="col text-center">
             <SurfaceChart data={this.state.costSurface.value} />
             <div>
-              <button
+              <ButtonSubmit
                 onClick={this.constFunctionSurface}
-                className="btn btn-primary d-inline-block mt-1 btn-sm"
+                spin={this.state.costSurface.status === serviceStatus.LOADING}
               >
-                <FontAwesomeIcon
-                  icon="spinner"
-                  className={`mr-2 ${
-                    this.state.costSurface.status === serviceStatus.LOADING
-                      ? 'fa-spin '
-                      : ''
-                  }`}
-                />
                 Compute Cost function surface
-              </button>
+              </ButtonSubmit>
             </div>
           </div>
         </div>
