@@ -56,19 +56,15 @@ export async function request(
  *
  * @param {string} fileUrl path to .csv file
  */
-export const getDataByFile = async (filePath, numOfCols) => {
-  return request(`${BASE_URL}/file`, { file: filePath, num_of_cols: numOfCols });
-};
+export function getDataByFile(filePath, numOfCols) {
+  return request(`${BASE_URL}/file`, {
+    file: filePath,
+    num_of_cols: numOfCols
+  });
+}
 
-// data, theta, alpha, maxIters
-export const gradientDescentUni = async (
-  x,
-  y,
-  initial_theta,
-  alpha,
-  num_iters
-) => {
-  return request('/api/gradient-descent-uni', null, {
+export function gradientDescentUni(x, y, initial_theta, alpha, num_iters) {
+  return request(`${BASE_URL}/gradient-descent-uni`, null, {
     method: 'POST',
     data: {
       x,
@@ -78,18 +74,33 @@ export const gradientDescentUni = async (
       num_iters
     }
   });
-};
+}
 
-export const hypothesis = async (x, theta) => {
-  return request('/api/hypothesis', null, {
+export function hypothesis(x, theta) {
+  return request(`${BASE_URL}/hypothesis`, null, {
     method: 'POST',
     data: { x, theta }
   });
-};
+}
 
-export const constFunctionSurface = async (x, y) => {
-  return request('/api/cost-surface', null, {
+export function constFunctionSurface(x, y) {
+  return request(`${BASE_URL}/cost-surface`, null, {
     method: 'POST',
     data: { x, y }
   });
-};
+}
+
+
+export function computeCost(x, y, theta) {
+  return request(`${BASE_URL}/compute-cost`, null, {
+    method: 'POST',
+    data: { x, y, theta }
+  });
+}
+
+export function normalizeFeatures(x) {
+  return request(`${BASE_URL}/normalize-features`, null, {
+    method: 'POST',
+    data: { x }
+  });
+}

@@ -21,24 +21,20 @@ def get_file():
 
     return jsonify({'x': x, 'y': y})
 
-
-@app.route('/housing_prices', methods=['GET'])
-def housing_prices():
-    return csv_file_to_json('../data/ex1data1.txt')
-
-
-@app.route('/housing_prices/compute_cost', methods=['POST'])
+# TODO: 
+@app.route('/compute_cost', methods=['POST'])
 def cost_func():
-    request_data = request.get_json()
-    data = np.array(request_data['data'])
-    theta = np.array(request_data['theta'])
-    ones = np.ones(data.shape[0])
-    x = np.array(data[:, 0])
-    X = np.column_stack((ones, x))
-    y = np.array(data[:, 1]).reshape((-1, 1))  # transpose vector
-    J = compute_cost(X, y, theta)
+    # request_data = request.get_json()
+    # x = np.array(request_data['x'])
+    # y = np.array(request_data['y'])
+    # theta = np.array(request_data['theta'])
+    # ones = np.ones(data.shape[0])
+    # x = np.array(data[:, 0])
+    # X = np.column_stack((ones, x))
+    # y = np.array(data[:, 1]).reshape((-1, 1))  # transpose vector
+    # J = compute_cost(X, y, theta)
 
-    return jsonify({'cost': J.tolist()})
+    return jsonify({})
 
 
 @app.route('/gradient-descent-uni', methods=['POST'])
@@ -86,6 +82,14 @@ def const_surface():
             J_vals[i, j] = compute_cost(X, y, theta)
 
     return jsonify({'J': J_vals.T.tolist(), 'theta0': theta0_vals.tolist(), 'theta1': theta1_vals.tolist()})
+
+
+@app.route('/normalize-features', methods=['POST'])
+def normalize_features():
+    request_data = request.get_json()
+    x = np.array(request_data['x'])
+
+    return jsonify(x.tolist())
 
 
 if __name__ == '__main__':
