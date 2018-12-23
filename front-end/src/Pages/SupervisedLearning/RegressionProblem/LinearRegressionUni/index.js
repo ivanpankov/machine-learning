@@ -227,24 +227,42 @@ class LinearRegressionUni extends Component {
         </div>
         <div className="row">
           <div className="col mb-3">
-            <p>
-              <strong>m</strong>
-              {` = ${count} = Number of training examples`}
-            </p>
-            <p>
-              <strong>x</strong>`s{` = input variable (features)`}
-            </p>
-            <p>
-              <strong>y</strong>`s{` = output variable (target)`}
-            </p>
-            <p>
-              (x<sup>(i)</sup>, y<sup>(i)</sup>) -{' '}
-              <strong>
-                i<sup>th</sup>
-              </strong>{' '}
+            <div>
+              <MathJax.Node formula={'m ='} className="d-inline-block mr-1" />
+              <span>Number of training examples</span>
+            </div>
+            <div>
+              <MathJax.Node
+                formula={'(x^{(i)}, y^{(i)}) = i^{th} '}
+                className="d-inline-block mr-1 ml-1"
+              />
               training example
-            </p>
-
+            </div>
+            <div>
+              <MathJax.Node
+                formula={'x^{(i)} ='}
+                className="d-inline-block mr-1"
+              />
+              input (features) of
+              <MathJax.Node
+                formula={'i^{th}'}
+                className="d-inline-block mr-1 ml-1"
+              />
+              training example
+            </div>
+            <div>
+              <MathJax.Node
+                formula={'y^{(i)}= '}
+                className="d-inline-block mr-1 ml-1"
+              />
+              output variable (target) of
+              <MathJax.Node
+                formula={'i^{th}'}
+                className="d-inline-block mr-1 ml-1"
+              />
+              training example
+            </div>
+           
             <div>
               <span>Hypothesis:</span>
               <MathJax.Node
