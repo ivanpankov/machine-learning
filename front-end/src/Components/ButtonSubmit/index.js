@@ -6,7 +6,7 @@ import { noop } from '../../lib/utils';
 import './styles.scss';
 
 export default class ButtonSubmit extends Component {
-  static PropTypes = {
+  static propTypes = {
     spin: PropTypes.bool,
     className: PropTypes.string,
     onClick: PropTypes.func,

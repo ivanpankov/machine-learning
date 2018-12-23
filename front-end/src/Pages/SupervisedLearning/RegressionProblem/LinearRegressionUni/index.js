@@ -17,7 +17,6 @@ import DataTable from './DataTable';
 import DataChart from './DataChart';
 import SurfaceChart from './SurfaceChart';
 import { withMessages } from '../../../../providers/Messages';
-import FontAwesomeIcon from '../../../../Components/FontAwesomeIcon';
 import ButtonSubmit from '../../../../Components/ButtonSubmit';
 
 import './styles.scss';

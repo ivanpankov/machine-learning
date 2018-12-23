@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import MathJax from 'react-mathjax';
 
 class Row extends PureComponent {
   static propTypes = {
@@ -15,8 +16,20 @@ class Row extends PureComponent {
   render() {
     return (
       <tr>
-        <td>{this.props.x[0]}</td>
-        <td>{this.props.y[0]}</td>
+        <td>
+          <MathJax.Node
+            formula={`x^{(${this.props.index})} = `}
+            className="d-inline-block mr-1"
+          />
+          {this.props.x[0]}
+        </td>
+        <td>
+          <MathJax.Node
+            formula={`y^{(${this.props.index})} = `}
+            className="d-inline-block mr-1"
+          />
+          {this.props.y[0]}
+        </td>
       </tr>
     );
   }
@@ -25,12 +38,14 @@ class Row extends PureComponent {
 export default class DataTable extends PureComponent {
   static propTypes = {
     x: PropTypes.array,
-    y: PropTypes.array
+    y: PropTypes.array,
+    index: PropTypes.number
   };
 
   static defaultProps = {
-    x: [],
-    y: []
+    x: [0],
+    y: [0],
+    index: 0
   };
 
   render() {
@@ -45,9 +60,18 @@ export default class DataTable extends PureComponent {
         </thead>
         <tbody>
           {x.slice(0, 5).map((xi, i) => (
-            <Row key={i} x={xi} y={y[i]} />
+            <Row key={i} x={xi} y={y[i]} index={i} />
           ))}
-          <Row key="last" x={['...']} y={['...']} />
+          <tr key="dots" className="text-center">
+            <td>...</td>
+            <td>...</td>
+          </tr>
+          <Row
+            key="last"
+            x={x[x.length - 1]}
+            y={y[y.length - 1]}
+            index={y.length}
+          />
         </tbody>
       </table>
     );
