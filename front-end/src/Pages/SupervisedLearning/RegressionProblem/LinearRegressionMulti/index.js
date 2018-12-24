@@ -11,7 +11,11 @@ import {
   texHypothesisVectorized,
   texMatrixX,
   texFuncMatrixX,
-  thetaVector
+  thetaVector,
+  texCostFunction,
+  texVectorY,
+  texFunctionVectorY,
+  texFunctionVectorTheta
 } from './constants';
 import MathJax from 'react-mathjax';
 import ButtonSubmit from '../../../../Components/ButtonSubmit';
@@ -101,7 +105,7 @@ class LinearRegressionMulti extends PureComponent {
   onThetaChange = () => {};
 
   render() {
-    const { data, dataNorm } = this.state;
+    const { data, dataNorm, isDataNormalized } = this.state;
     const theta0 = this.state.theta.value[0][0];
     const theta1 = this.state.theta.value[1][0];
     const theta2 = this.state.theta.value[2][0];
@@ -190,6 +194,20 @@ class LinearRegressionMulti extends PureComponent {
                 className="d-inline-block mr-1 ml-1"
               />
             </div>
+            <div>
+              Parameters:
+              <MathJax.Node
+                formula={'\\theta'}
+                className="d-inline-block mr-1 ml-1"
+              />
+            </div>
+            <div>
+              Const Function:
+              <MathJax.Node
+                formula={texCostFunction}
+                className="d-inline-block mr-1 ml-1"
+              />
+            </div>
           </div>
         </div>
         <div className="row">
@@ -212,8 +230,12 @@ class LinearRegressionMulti extends PureComponent {
           </div>
           <div className="col-4">
             <MathJax.Node formula={thetaVector} className="mb-3" />
+            <MathJax.Node formula={texFunctionVectorTheta([theta0, theta1, theta2])} className="mb-3" />
           </div>
-          <div className="col-4">ssdfgdfg</div>
+          <div className="col-4">
+            <MathJax.Node formula={texVectorY} className="mb-3"/>
+            <MathJax.Node formula={texFunctionVectorY(data.y)} className="mb-3"/>
+          </div>
         </div>
 
         <div className="row">
@@ -238,7 +260,7 @@ class LinearRegressionMulti extends PureComponent {
           </div>
         </div>
 
-        {dataNorm.x.length ? (
+        {isDataNormalized ? (
           <div className="row">
             <div className="col mt-3">
               <h3 className="d-inline">Normalized data</h3>

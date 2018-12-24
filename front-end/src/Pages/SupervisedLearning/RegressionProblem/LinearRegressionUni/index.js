@@ -210,7 +210,6 @@ class LinearRegressionUni extends Component {
 
   render() {
     const { data } = this.state;
-    const count = data.y.length;
     const theta0 = this.state.theta.value[0][0];
     const theta1 = this.state.theta.value[1][0];
 
