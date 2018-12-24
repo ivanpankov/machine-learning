@@ -16,12 +16,12 @@ const chartLayout = {
     xaxis: {
       nticks: 10,
       range: [-10, 10],
-      title: 'θ0'
+      title: 'θ<sub>0</sub>'
     },
     yaxis: {
       nticks: 10,
       range: [-1, 4],
-      title: 'θ1'
+      title: 'θ<sub>1</sub>'
     },
     zaxis: {
       nticks: 15,

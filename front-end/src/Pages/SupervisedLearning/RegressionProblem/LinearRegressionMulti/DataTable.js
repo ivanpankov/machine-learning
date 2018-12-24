@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import MathJax from 'react-mathjax';
+import MathJax from 'react-mathjax2';
 
 class Row extends PureComponent {
   static propTypes = {

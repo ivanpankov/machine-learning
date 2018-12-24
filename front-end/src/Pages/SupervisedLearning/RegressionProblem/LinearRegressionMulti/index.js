@@ -17,7 +17,7 @@ import {
   texFunctionVectorY,
   texFunctionVectorTheta
 } from './constants';
-import MathJax from 'react-mathjax';
+import MathJax from 'react-mathjax2';
 import ButtonSubmit from '../../../../Components/ButtonSubmit';
 
 const INITIAL_THETA = [[0], [0], [0]];

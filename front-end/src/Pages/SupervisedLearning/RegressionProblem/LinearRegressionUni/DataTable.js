@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import MathJax from 'react-mathjax';
+import MathJax from 'react-mathjax2';
 
 class Row extends PureComponent {
   static propTypes = {
@@ -17,18 +17,12 @@ class Row extends PureComponent {
     return (
       <tr>
         <td>
-          <MathJax.Node
-            formula={`x^{(${this.props.index})} = `}
-            className="d-inline-block mr-1"
-          />
-          {this.props.x[0]}
+          <MathJax.Node inline>{`x^{(${this.props.index})} =`}</MathJax.Node>
+          <span className="ml-1">{this.props.x[0]}</span>
         </td>
         <td>
-          <MathJax.Node
-            formula={`y^{(${this.props.index})} = `}
-            className="d-inline-block mr-1"
-          />
-          {this.props.y[0]}
+          <MathJax.Node inline>{`y^{(${this.props.index})} = `}</MathJax.Node>
+          <span className="ml-1">{this.props.y[0]}</span>
         </td>
       </tr>
     );

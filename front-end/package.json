@@ -12,7 +12,7 @@
     "react": "^16.7.0",
     "react-addons-css-transition-group": "^15.6.2",
     "react-dom": "^16.7.0",
-    "react-mathjax": "^1.0.1",
+    "react-mathjax2": "0.0.2",
     "react-plotly.js": "^2.2.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.2"

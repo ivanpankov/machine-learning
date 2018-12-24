@@ -5,7 +5,7 @@ import Supervised from '../../Pages/SupervisedLearning';
 import Unsupervised from '../../Pages/UnsupervisedLearning';
 import Reinforcement from '../../Pages/ReinforcementLearning';
 import Recommender from '../../Pages/RecommenderSystem';
-import MathJax from 'react-mathjax';
+import MathJax from 'react-mathjax2';
 
 export default class Main extends Component {
   static propTypes = {
@@ -18,7 +18,10 @@ export default class Main extends Component {
 
   render() {
     return (
-      <MathJax.Provider>
+      <MathJax.Context
+        input="tex"
+        options={{ asciimath2jax: { preview: 'none' } }}
+      >
         <main className={this.props.className}>
           <div className="container">
             <Route path="/supervised" component={Supervised} />
@@ -27,7 +30,7 @@ export default class Main extends Component {
             <Route path="/recommender" component={Recommender} />
           </div>
         </main>
-      </MathJax.Provider>
+      </MathJax.Context>
     );
   }
 }

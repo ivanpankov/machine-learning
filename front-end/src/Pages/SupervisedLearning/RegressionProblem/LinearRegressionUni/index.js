@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import MathJax from 'react-mathjax';
+import MathJax from 'react-mathjax2';
 import {
   gradientDescentUni,
   hypothesis,
@@ -179,7 +179,10 @@ class LinearRegressionUni extends Component {
     const theta1 = String(theta[1][0]);
 
     return (
-      theta0.length && theta1.length && regIsDigit.test(theta0) && regIsDigit.test(theta1)
+      theta0.length &&
+      theta1.length &&
+      regIsDigit.test(theta0) &&
+      regIsDigit.test(theta1)
     );
   };
 
@@ -226,71 +229,47 @@ class LinearRegressionUni extends Component {
         </div>
         <div className="row">
           <div className="col mb-3">
-            <div>
-              <MathJax.Node formula={'m ='} className="d-inline-block mr-1" />
-              <span>Number of training examples</span>
-            </div>
-            <div>
-              <MathJax.Node
-                formula={'(x^{(i)}, y^{(i)}) = i^{th} '}
-                className="d-inline-block mr-1 ml-1"
-              />
-              training example
-            </div>
-            <div>
-              <MathJax.Node
-                formula={'x^{(i)} ='}
-                className="d-inline-block mr-1"
-              />
-              input (features) of
-              <MathJax.Node
-                formula={'i^{th}'}
-                className="d-inline-block mr-1 ml-1"
-              />
-              training example
-            </div>
-            <div>
-              <MathJax.Node
-                formula={'y^{(i)}= '}
-                className="d-inline-block mr-1 ml-1"
-              />
-              output variable (target) of
-              <MathJax.Node
-                formula={'i^{th}'}
-                className="d-inline-block mr-1 ml-1"
-              />
-              training example
-            </div>
-           
-            <div>
-              <span>Hypothesis:</span>
-              <MathJax.Node
-                formula={texHypothesis}
-                className="d-inline-block pl-3"
-              />
-            </div>
-            <div>
-              <span>Paramaters:</span>
-              <MathJax.Node
-                formula={texParameters}
-                className="d-inline-block pl-3"
-              />
-            </div>
-            <div>
-              <span>Cost Function:</span>
-              <MathJax.Node
-                formula={texCostFunction}
-                className="d-inline-block pl-3"
-              />
-            </div>
-            <div>
-              <span>Goal:</span>
-              <MathJax.Node
-                formula={texGoal}
-                className="d-inline-block pl-3"
-                style={{ position: 'relative', top: '10px' }}
-              />
-            </div>
+            <p>
+              <MathJax.Node inline>{'m ='}</MathJax.Node>
+              <span className="ml-1">Number of training examples</span>
+            </p>
+            <p>
+              <MathJax.Node inline>
+                {'(x^{(i)}, y^{(i)}) = i^{th}'}
+              </MathJax.Node>
+              <span className="ml-1">training example</span>
+            </p>
+            <p>
+              <MathJax.Node inline>{'x^{(i)} ='}</MathJax.Node>
+              <span className="ml-1 mr-1">input (features) of</span>
+              <MathJax.Node inline>{'i^{th}'}</MathJax.Node>
+              <span className="ml-1">training example</span>
+            </p>
+            <p>
+              <MathJax.Node inline>{'y^{(i)}='}</MathJax.Node>
+              <span className="ml-1 mr-1">output variable (target) of</span>
+              <MathJax.Node inline>{'i^{th}'}</MathJax.Node>
+              <span className="ml-1">training example</span>
+            </p>
+
+            <p>
+              <span className="mr-3">Hypothesis:</span>
+              <MathJax.Node inline>{texHypothesis}</MathJax.Node>
+            </p>
+            <p>
+              <span className="mr-3">Parameters:</span>
+              <MathJax.Node inline>{texParameters}</MathJax.Node>
+            </p>
+            <p>
+              <span className="mr-3">Cost Function:</span>
+              <MathJax.Node inline>{texCostFunction}</MathJax.Node>
+            </p>
+            <p>
+              <span className="mr-3">Goal:</span>
+              <span style={{ position: 'relative', top: '12px' }}>
+                <MathJax.Node inline>{texGoal}</MathJax.Node>
+              </span>
+            </p>
           </div>
         </div>
         <div className="row">
@@ -300,11 +279,8 @@ class LinearRegressionUni extends Component {
         </div>
         <div className="row">
           <div className="col text-center">
-            <div>
-              <MathJax.Node
-                formula={texHypothesis + '='}
-                className="d-inline-block"
-              />
+            <p>
+              <MathJax.Node inline>{texHypothesis + '='}</MathJax.Node>
               <input
                 type="text"
                 value={theta0}
@@ -322,8 +298,8 @@ class LinearRegressionUni extends Component {
                 onChange={this.onThetaChange}
                 data-theta="one"
               />
-              <MathJax.Node formula={'x'} className="d-inline-block" />
-            </div>
+              <MathJax.Node inline>{'x'}</MathJax.Node>
+            </p>
 
             <div>
               <ButtonSubmit
