@@ -21,6 +21,7 @@ import MathJax from 'react-mathjax';
 import ButtonSubmit from '../../../../Components/ButtonSubmit';
 
 const INITIAL_THETA = [[0], [0], [0]];
+const regIsDigit = new RegExp(/^-?\d*(\.\d+)?$/);
 
 class LinearRegressionMulti extends PureComponent {
   state = {
@@ -102,7 +103,51 @@ class LinearRegressionMulti extends PureComponent {
     }
   };
 
-  onThetaChange = () => {};
+  isThetaValid = theta => {
+    const theta0 = String(theta[0][0]);
+    const theta1 = String(theta[1][0]);
+    const theta2 = String(theta[2][0]);
+
+    return (
+      theta0.length &&
+      theta1.length &&
+      theta2.length &&
+      regIsDigit.test(theta0) &&
+      regIsDigit.test(theta1) &&
+      regIsDigit.test(theta2)
+    );
+  };
+
+  onThetaChange = event => {
+    const prevTheta = this.state.theta.value;
+    let newTheta;
+    switch (event.target.dataset.theta) {
+      case 'zero':
+        newTheta = [[event.target.value], prevTheta[1], prevTheta[2]];
+        break;
+
+      case 'one':
+        newTheta = [prevTheta[0], [event.target.value], prevTheta[2]];
+        break;
+
+      case 'two':
+        newTheta = [prevTheta[0], prevTheta[1], [event.target.value]];
+        break;
+
+      default:
+        newTheta = prevTheta;
+    }
+
+    this.setState({
+      theta: {
+        ...this.state.theta,
+        value: newTheta,
+        valid: this.isThetaValid(newTheta)
+      }
+    });
+  };
+
+  computeTheta = () => {};
 
   render() {
     const { data, dataNorm, isDataNormalized } = this.state;
@@ -230,11 +275,17 @@ class LinearRegressionMulti extends PureComponent {
           </div>
           <div className="col-4">
             <MathJax.Node formula={thetaVector} className="mb-3" />
-            <MathJax.Node formula={texFunctionVectorTheta([theta0, theta1, theta2])} className="mb-3" />
+            <MathJax.Node
+              formula={texFunctionVectorTheta([theta0, theta1, theta2])}
+              className="mb-3"
+            />
           </div>
           <div className="col-4">
-            <MathJax.Node formula={texVectorY} className="mb-3"/>
-            <MathJax.Node formula={texFunctionVectorY(data.y)} className="mb-3"/>
+            <MathJax.Node formula={texVectorY} className="mb-3" />
+            <MathJax.Node
+              formula={texFunctionVectorY(data.y)}
+              className="mb-3"
+            />
           </div>
         </div>
 

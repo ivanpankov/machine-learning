@@ -24,7 +24,7 @@ import './styles.scss';
 const ALPHA = 0.01;
 const NUMBER_OF_ITERATIONS = 1500;
 const INITIAL_THETA = [[0], [0]];
-const reg = new RegExp(/^-?\d*(\.\d+)?$/);
+const regIsDigit = new RegExp(/^-?\d*(\.\d+)?$/);
 
 class LinearRegressionUni extends Component {
   state = {
@@ -179,7 +179,7 @@ class LinearRegressionUni extends Component {
     const theta1 = String(theta[1][0]);
 
     return (
-      theta0.length && theta1.length && reg.test(theta0) && reg.test(theta1)
+      theta0.length && theta1.length && regIsDigit.test(theta0) && regIsDigit.test(theta1)
     );
   };
 
