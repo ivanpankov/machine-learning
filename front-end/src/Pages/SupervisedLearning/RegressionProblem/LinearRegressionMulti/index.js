@@ -15,7 +15,8 @@ import {
   texCostFunction,
   texVectorY,
   texFunctionVectorY,
-  texFunctionVectorTheta
+  texFunctionVectorTheta,
+  texNormalizedValue
 } from './constants';
 import MathJax from 'react-mathjax2';
 import ButtonSubmit from '../../../../Components/ButtonSubmit';
@@ -167,92 +168,57 @@ class LinearRegressionMulti extends PureComponent {
           </div>
         </div>
         <div className="row">
-          <div className="col mb-3\\sum_{i=1}">
-            <div>
-              <MathJax.Node formula={'m ='} className="d-inline-block mr-1" />
-              <span>Number of training examples</span>
-            </div>
-            <div>
+          <div className="col mb-3">
+            <p>
+              <MathJax.Node inline>{'m ='}</MathJax.Node>
+              <span className="ml-1">Number of training examples</span>
+            </p>
+            <p>
+              <MathJax.Node inline>
+                {'(x^{(i)}, y^{(i)}) = i^{th}'}
+              </MathJax.Node>
+              <span className="ml-1">training example</span>
+            </p>
+            <p>
+              <MathJax.Node inline>{'x^{(i)} ='}</MathJax.Node>
+              <span className="ml-1 mr-1">input (features) of</span>
+              <MathJax.Node inline>{'i^{th}'}</MathJax.Node>
+              <span className="ml-1">training example</span>
+            </p>
+            <p>
+              <MathJax.Node inline>{'n ='}</MathJax.Node>
+              <span className="ml-1">Number of features</span>
+            </p>
+            <p>
+              <MathJax.Node inline>{'x^{(i)}_j ='}</MathJax.Node>
+              <span className="ml-1 mr-1">value of feature</span>
+              <MathJax.Node inline>{'j'}</MathJax.Node>
+              <span className="ml-1 mr-1">in</span>
+              <MathJax.Node inline>{'i^{th}'}</MathJax.Node>
+              <span className="ml-1">training example</span>
+            </p>
+            <p>
+              <MathJax.Node inline>{'y^{(i)} ='}</MathJax.Node>
+              <span className="ml-1 mr-1">output variable (target) of</span>
+              <MathJax.Node inline>{'i^{th}'}</MathJax.Node>
+              <span className="ml-1">training example</span>
+            </p>
+            <p>
+              <span className="mr-3">Hypothesis:</span>
               <MathJax.Node
-                formula={'(x^{(i)}, y^{(i)}) = i^{th} '}
-                className="d-inline-block mr-1 ml-1"
-              />
-              training example
-            </div>
-            <div>
-              <MathJax.Node
-                formula={'x^{(i)} ='}
-                className="d-inline-block mr-1"
-              />
-              input (features) of
-              <MathJax.Node
-                formula={'i^{th}'}
-                className="d-inline-block mr-1 ml-1"
-              />
-              training example
-            </div>
-            <div>
-              <MathJax.Node formula={'n ='} className="d-inline-block mr-1" />
-              <span>Number of features</span>
-            </div>
-            <div>
-              <MathJax.Node
-                formula={'x^{(i)}_j ='}
-                className="d-inline-block mr-1"
-              />
-              value of feature
-              <MathJax.Node formula={'j'} className="d-inline-block mr-1" />
-              in
-              <MathJax.Node
-                formula={'i^{th}'}
-                className="d-inline-block mr-1 ml-1"
-              />
-              training example
-            </div>
-            <div>
-              <MathJax.Node
-                formula={'y^{(i)} ='}
-                className="d-inline-block mr-1"
-              />
-              output variable (target) of
-              <MathJax.Node
-                formula={'i^{th}'}
-                className="d-inline-block mr-1 ml-1"
-              />
-              training example
-            </div>
-            <div>
-              Hypothesis:
-              <MathJax.Node
-                formula={
-                  texHypothesis +
-                  '=' +
-                  texHypothesisWithX0 +
-                  '=' +
-                  texHypothesisVectorized
-                }
-                className="d-inline-block mr-1 ml-1"
-              />
-              <em>; Where</em>
-              <MathJax.Node
-                formula={'x_0 = 1'}
-                className="d-inline-block mr-1 ml-1"
-              />
-            </div>
-            <div>
-              Parameters:
-              <MathJax.Node
-                formula={'\\theta'}
-                className="d-inline-block mr-1 ml-1"
-              />
-            </div>
-            <div>
-              Const Function:
-              <MathJax.Node
-                formula={texCostFunction}
-                className="d-inline-block mr-1 ml-1"
-              />
-            </div>
+                inline
+              >{`${texHypothesis} = ${texHypothesisWithX0} = ${texHypothesisVectorized}`}</MathJax.Node>
+              <em className="ml-2 mr-1">; Where</em>
+              <MathJax.Node inline>{'x_0 = 1'}</MathJax.Node>
+            </p>
+            <p>
+              <span className="mr-3">Parameters:</span>
+              <MathJax.Node inline>{'\\theta'}</MathJax.Node>
+            </p>
+            <p>
+              <span className="mr-3">Const Function:</span>
+              <MathJax.Node inline>{texCostFunction}</MathJax.Node>
+            </p>
           </div>
         </div>
         <div className="row">
@@ -270,37 +236,37 @@ class LinearRegressionMulti extends PureComponent {
 
         <div className="row">
           <div className="col-4">
-            <MathJax.Node formula={texMatrixX} className="mb-3" />
-            <MathJax.Node formula={texFuncMatrixX(data.x)} className="mt-3" />
+            <MathJax.Node>{texMatrixX}</MathJax.Node>
+            <MathJax.Node>{texFuncMatrixX(data.x)}</MathJax.Node>
           </div>
           <div className="col-4">
-            <MathJax.Node formula={thetaVector} className="mb-3" />
-            <MathJax.Node
-              formula={texFunctionVectorTheta([theta0, theta1, theta2])}
-              className="mb-3"
-            />
+            <MathJax.Node>{thetaVector}</MathJax.Node>
+            <MathJax.Node>
+              {texFunctionVectorTheta([theta0, theta1, theta2])}
+            </MathJax.Node>
           </div>
           <div className="col-4">
-            <MathJax.Node formula={texVectorY} className="mb-3" />
-            <MathJax.Node
-              formula={texFunctionVectorY(data.y)}
-              className="mb-3"
-            />
+            <MathJax.Node>{texVectorY}</MathJax.Node>
+            <MathJax.Node>{texFunctionVectorY(data.y)}</MathJax.Node>
           </div>
         </div>
 
         <div className="row">
-          <div className="col text-center mt-3 mb-3">
-            <h2>Feature scaling</h2>
-            <span>Mean value: </span>
-            <MathJax.Node formula={texMean} className="d-inline-block" />
-            <br />
-            <span>Standard deviation</span>
-            <MathJax.Node
-              formula={texStandardDeviation}
-              className="d-inline-block"
-            />
-            <div>
+          <div className="col mt-3 mb-3">
+            <h2 className="text-center mb-3">Feature scaling</h2>
+            <p>
+              <span className="mr-3">Mean value: </span>
+              <MathJax.Node inline>{texMean}</MathJax.Node>
+            </p>
+            <p>
+              <span className="mr-3">Simple standard deviation:</span>
+              <MathJax.Node inline>{texStandardDeviation}</MathJax.Node>
+            </p>
+            <p>
+              <span className="mr-3">Normalized value:</span>
+              <MathJax.Node inline>{texNormalizedValue}</MathJax.Node>
+            </p>
+            <div className="text-center">
               <ButtonSubmit
                 onClick={this.normalizeFeatures}
                 spin={this.state.dataNorm.status === serviceStatus.LOADING}
@@ -323,11 +289,8 @@ class LinearRegressionMulti extends PureComponent {
         <div className="row">
           <div className="col text-center mt-3 mb-3">
             <h2>Hypothesis</h2>
-            <div>
-              <MathJax.Node
-                formula={texHypothesis + '='}
-                className="d-inline-block"
-              />
+            <p>
+              <MathJax.Node inline>{texHypothesis + '='}</MathJax.Node>
               <input
                 type="text"
                 value={theta0}
@@ -345,7 +308,7 @@ class LinearRegressionMulti extends PureComponent {
                 onChange={this.onThetaChange}
                 data-theta="one"
               />
-              <MathJax.Node formula={'x_1'} className="d-inline-block" />
+              <MathJax.Node inline>{'x_1'}</MathJax.Node>
               <span className="m-1">+</span>
               <input
                 type="text"
@@ -355,8 +318,8 @@ class LinearRegressionMulti extends PureComponent {
                 onChange={this.onThetaChange}
                 data-theta="two"
               />
-              <MathJax.Node formula={'x_2'} className="d-inline-block" />
-            </div>
+              <MathJax.Node inline>{'x_2'}</MathJax.Node>
+            </p>
 
             <div>
               <ButtonSubmit

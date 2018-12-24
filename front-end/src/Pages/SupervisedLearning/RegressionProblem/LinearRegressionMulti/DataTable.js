@@ -19,25 +19,16 @@ class Row extends PureComponent {
     return (
       <tr>
         <td>
-          <MathJax.Node
-            formula={`x^{(${this.props.index})}_1 = `}
-            className="d-inline-block mr-1"
-          />
-          {this.props.x[0]}
+          <MathJax.Node inline>{`x^{(${this.props.index})}_1 =`}</MathJax.Node>
+          <span className="ml-1">{this.props.x[0]}</span>
         </td>
         <td>
-          <MathJax.Node
-            formula={`x^{(${this.props.index})}_2 = `}
-            className="d-inline-block mr-1"
-          />
-          {this.props.x[1]}
+          <MathJax.Node inline>{`x^{(${this.props.index})}_2 =`}</MathJax.Node>
+          <span className="ml-1">{this.props.x[1]}</span>
         </td>
         <td>
-          <MathJax.Node
-            formula={`y^{(${this.props.index})} = `}
-            className="d-inline-block mr-1"
-          />
-          {this.props.y[0]}
+          <MathJax.Node inline>{`y^{(${this.props.index})} =`}</MathJax.Node>
+          <span className="ml-1">{this.props.y[0]}</span>
         </td>
       </tr>
     );

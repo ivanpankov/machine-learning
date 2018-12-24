@@ -1,6 +1,7 @@
 export const texMean =
   '\\bar{x} = {1\\over{m}}\\sum_{i=1}^m x^{(i)} = {{x^{(1)} + x^{(2)} + \\cdots + x^{(m)}} \\over{m}}';
-export const texStandardDeviation = '';
+export const texStandardDeviation = 's= \\sqrt{{\\sum^m_{i=1}(x^{(i)}-\\bar{x})^2}\\over{m-1}}';
+export const texNormalizedValue = 'x^{(i)} = {x^{(i)}-\\bar{x}\\over{s}}';
 export const texHypothesis =
   'h_\\theta(x) = \\theta_0 + \\theta_1x_1 + \\theta_2x_2 + \\cdots + \\theta_nx_n';
 export const texHypothesisWithX0 =
