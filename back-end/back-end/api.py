@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, jsonify
 import numpy as np
 from utils import csv_file_to_json, get_file_path
-from ml import compute_cost, gradient_descent, compute_hypothesis, feature_normalization
+from ml import compute_cost, gradient_descent_uni, compute_hypothesis, feature_normalization, gradient_descent_multi
 
 app = Flask(__name__)
 
@@ -40,7 +40,7 @@ def cost_func():
 
 
 @app.route('/gradient-descent-uni', methods=['POST'])
-def grad_desc_uni():
+def grad_desc_u():
     request_data = request.get_json()
     initial_theta = np.array(request_data['initial_theta'])
     alpha = request_data['alpha']
@@ -49,7 +49,7 @@ def grad_desc_uni():
     ones = np.ones(x.shape[0]).reshape(-1, 1)
     X = np.column_stack((ones, x))
     y = np.array(request_data['y'])
-    theta = gradient_descent(X, y, initial_theta, alpha, num_iters)
+    theta = gradient_descent_uni(X, y, initial_theta, alpha, num_iters)
 
     return jsonify(theta)
 
@@ -93,6 +93,22 @@ def normalize_features():
     x_norm = feature_normalization(x)
 
     return jsonify(x_norm.tolist())
+
+
+@app.route('/gradient-descent-multi', methods=['POST'])
+def grad_desc_m():
+    request_data = request.get_json()
+    initial_theta = np.array(request_data['initial_theta'])
+    alpha = request_data['alpha']
+    num_iters = request_data['num_iters']
+    x = np.array(request_data['x'])
+    ones = np.ones(x.shape[0]).reshape(-1, 1)
+    X = np.column_stack((ones, x))
+    y = np.array(request_data['y'])
+    theta = gradient_descent_multi(X, y, initial_theta, alpha, num_iters)
+
+    return jsonify(theta)
+
 
 
 if __name__ == '__main__':

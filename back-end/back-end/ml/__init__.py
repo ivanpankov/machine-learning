@@ -12,7 +12,7 @@ def compute_cost(X, y, theta):
     return np.sum(sqrErrors) / (2 * m)
 
 
-def gradient_descent(X, y, theta, alpha, num_iters):
+def gradient_descent_uni(X, y, theta, alpha, num_iters):
     m = y.size
     x = np.array(X[:, 1]).reshape((-1, 1))
     # J_history = np.zeros(num_iters).reshape((-1, 1))
@@ -50,3 +50,16 @@ def feature_normalization(x):
         x_norm[:, i] = (x[:, i] - mean[i]) / sigma[i]
 
     return x_norm
+
+
+def gradient_descent_multi(X, y, theta, alpha, num_iters):
+    m = y.size
+    # x = np.array(X[:, 1]).reshape((-1, 1))
+    theta = np.array(X)
+    h = theta.T@X
+
+    # theta = 0.5/m
+    print(h.T @ h)
+
+
+    return theta.tolist()
