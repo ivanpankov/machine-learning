@@ -1,54 +1,47 @@
-import React, { Component } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { MessagesContext } from './MessagesContext';
 import { ALERT_TYPES } from '../../Components/Alert';
 
 const MESSAGE_LIFETIME = 3500;
 
-export class MessagesProvider extends Component {
-  static propTypes = {
-    children: PropTypes.node.isRequired
-  };
+export function MessagesProvider({ children = null }) {
+  const [messages, setMessages] = useState([]);
+  const intervalId = useRef(0);
 
-  state = {
-    messages: []
-  };
-
-  intervalId = 0;
-
-  addMessage = message => {
+  const addMessage = message => {
     if (!message.content) return;
-    if (!this.intervalId) {
-      this.intervalId = setInterval(() => {
-        const newMessages = [...this.state.messages.slice(1)];
+    if (!intervalId.current) {
+      intervalId.current = setInterval(() => {
+        const newMessages = [...messages.slice(1)];
         if (!newMessages.length) {
-          clearInterval(this.intervalId);
-          this.intervalId = 0;
+          clearInterval(intervalId.current);
+          intervalId.current = 0;
         }
-        this.setState({ messages: newMessages });
+        setMessages(newMessages);
       }, MESSAGE_LIFETIME);
     }
 
     setTimeout(() => {
-      this.setState({
-        messages: [
-          {
-            content: message.content,
-            type: message.type || ALERT_TYPES.PRIMARY
-          },
-          ...this.state.messages
-        ]
-      });
+      setMessages([
+        {
+          content: message.content,
+          type: message.type || ALERT_TYPES.PRIMARY
+        },
+        ...messages
+      ]);
     });
   };
 
-  render() {
-    return (
-      <MessagesContext.Provider
-        value={{ list: this.state.messages, addMessage: this.addMessage, ALERT_TYPES }}
-      >
-        {this.props.children}
-      </MessagesContext.Provider>
-    );
-  }
+  return (
+    <MessagesContext.Provider
+      value={{ list: messages, addMessage: addMessage, ALERT_TYPES }}
+    >
+      {children}
+    </MessagesContext.Provider>
+  );
 }
+
+MessagesProvider.propTypes = {
+  children: PropTypes.node.isRequired
+};
