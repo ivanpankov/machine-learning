@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import NavBar from './Components/NavBar';
 import Main from './Components/Main';
 import Sidebar from './Components/Sidebar';
@@ -33,21 +33,17 @@ const links = [
   { name: 'Recommender system', link: '/recommender' }
 ];
 
-class App extends Component {
-  render() {
-    return (
-      <>
-        <NavBar />
-        <MessagesProvider>
-          <div className="d-flex flex-grow-1 flex-column flex-lg-row">
-            <Sidebar links={links} className="p-3 border-right" />
-            <Main className="p-3 flex-grow-1" />
-          </div>
-          <Toast />
-        </MessagesProvider>
-      </>
-    );
-  }
+export default function App() {
+  return (
+    <>
+      <NavBar />
+      <MessagesProvider>
+        <div className="d-flex flex-grow-1 flex-column flex-lg-row">
+          <Sidebar links={links} className="p-3 border-right" />
+          <Main className="p-3 flex-grow-1" />
+        </div>
+        <Toast />
+      </MessagesProvider>
+    </>
+  );
 }
-
-export default App;

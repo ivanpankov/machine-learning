@@ -1,51 +1,41 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import Icon from "../Icon";
-import SideNavBar from "./SideNavBar";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import Icon from '../Icon';
+import SideNavBar from './SideNavBar';
 
-export default class Sidebar extends Component {
-  static propTypes = {
-    links: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string,
-        link: PropTypes.string
-      })
-    ),
-    className: PropTypes.string
-  };
+export default function Sidebar({ links = [], className = '' }) {
+  const [showNavBar, setShowNavBar] = useState(false);
 
-  static defaultProps = {
-    links: [],
-    className: ''
-  };
-
-  state = { showNavBar: false };
-
-  toggleNavBar = (event) => {
+  const toggleNavBar = event => {
     event.preventDefault();
-    this.setState({ showNavBar: !this.state.showNavBar });
+    setShowNavBar(!showNavBar);
   };
 
-  render() {
-    return (
-      <div id="sidebar" className={this.props.className}>
-        <form className="d-flex align-items-center">
-          <input
-            type="search"
-            className="form-control ds-input d-inline"
-            id="search-input"
-            placeholder="Search..."
-            autoComplete="off"
-          />
-          <button
-            className="btn navbar-toggler d-lg-none"
-            onClick={this.toggleNavBar}
-          >
-            <Icon icon="bars" />
-          </button>
-        </form>
-        <SideNavBar links={this.props.links} show={this.state.showNavBar}/>
-      </div>
-    );
-  }
+  return (
+    <div id="sidebar" className={className}>
+      <form className="d-flex align-items-center">
+        <input
+          type="search"
+          className="form-control ds-input d-inline"
+          id="search-input"
+          placeholder="Search..."
+          autoComplete="off"
+        />
+        <button className="btn navbar-toggler d-lg-none" onClick={toggleNavBar}>
+          <Icon icon="bars" />
+        </button>
+      </form>
+      <SideNavBar links={links} show={showNavBar} />
+    </div>
+  );
 }
+
+Sidebar.propTypes = {
+  links: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      link: PropTypes.string
+    })
+  ),
+  className: PropTypes.string
+};
