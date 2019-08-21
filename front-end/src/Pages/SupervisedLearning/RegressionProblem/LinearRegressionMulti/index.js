@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import serviceStatus from '../../../../services/serviceStatus';
-import { getDataByFile, normalizeFeatures } from '../../../../services/ml';
+import { getDataByFile, normalizeFeatures, gradientDescentMulti } from '../../../../services/ml';
 import DataTable from './DataTable';
 import { withMessages } from '../../../../providers/Messages';
 import {
@@ -21,6 +21,8 @@ import {
 import MathJax from 'react-mathjax2';
 import ButtonSubmit from '../../../../Components/ButtonSubmit';
 
+const ALPHA = 0.01;
+const NUMBER_OF_ITERATIONS = 1500;
 const INITIAL_THETA = [[0], [0], [0]];
 const regIsDigit = new RegExp(/^-?\d*(\.\d+)?$/);
 
@@ -148,7 +150,48 @@ class LinearRegressionMulti extends PureComponent {
     });
   };
 
-  computeTheta = () => {};
+  computeTheta = async () => {
+    this.setState({
+      theta: {
+        status: serviceStatus.LOADING,
+        error: {},
+        value: INITIAL_THETA,
+        valid: true
+      }
+    });
+
+    const { x, y } = this.state.data;
+    const response = await gradientDescentMulti(
+      x,
+      y,
+      INITIAL_THETA,
+      ALPHA,
+      NUMBER_OF_ITERATIONS
+    );
+
+    console.log(response);
+
+    if (response instanceof Error) {
+      this.setState({
+        theta: {
+          status: serviceStatus.ERROR,
+          error: response,
+          value: INITIAL_THETA,
+          valid: false
+        }
+      });
+    } else {
+      this.setState({
+        theta: {
+          status: serviceStatus.OK,
+          error: {},
+          // value: [[response[0][0].toFixed(3)], [response[1][0].toFixed(3)], [response[2][0].toFixed(3)]],
+          value: [[0],[0],[0]],
+          valid: true
+        }
+      });
+    }
+  };
 
   render() {
     const { data, dataNorm, isDataNormalized } = this.state;
@@ -237,19 +280,30 @@ class LinearRegressionMulti extends PureComponent {
         <div className="row">
           <div className="col-4">
             <MathJax.Node>{texMatrixX}</MathJax.Node>
-            <MathJax.Node>{texFuncMatrixX(data.x)}</MathJax.Node>
           </div>
           <div className="col-4">
             <MathJax.Node>{thetaVector}</MathJax.Node>
-            <MathJax.Node>
-              {texFunctionVectorTheta([theta0, theta1, theta2])}
-            </MathJax.Node>
           </div>
           <div className="col-4">
             <MathJax.Node>{texVectorY}</MathJax.Node>
-            <MathJax.Node>{texFunctionVectorY(data.y)}</MathJax.Node>
           </div>
         </div>
+
+        {data.x.length ? (
+          <div className="row">
+            <div className="col-4">
+              <MathJax.Node>{texFuncMatrixX(data.x)}</MathJax.Node>
+            </div>
+            <div className="col-4">
+              <MathJax.Node>
+                {texFunctionVectorTheta([theta0, theta1, theta2])}
+              </MathJax.Node>
+            </div>
+            <div className="col-4">
+              <MathJax.Node>{texFunctionVectorY(data.y)}</MathJax.Node>
+            </div>
+          </div>
+        ) : null}
 
         <div className="row">
           <div className="col mt-3 mb-3">

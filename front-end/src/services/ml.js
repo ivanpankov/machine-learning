@@ -90,7 +90,6 @@ export function constFunctionSurface(x, y) {
   });
 }
 
-
 export function computeCost(x, y, theta) {
   return request(`${BASE_URL}/compute-cost`, null, {
     method: 'POST',
@@ -102,5 +101,18 @@ export function normalizeFeatures(x) {
   return request(`${BASE_URL}/normalize-features`, null, {
     method: 'POST',
     data: { x }
+  });
+}
+
+export function gradientDescentMulti(x, y, initial_theta, alpha, num_iters) {
+  return request(`${BASE_URL}/gradient-descent-multi`, null, {
+    method: 'POST',
+    data: {
+      x,
+      y,
+      initial_theta,
+      alpha,
+      num_iters
+    }
   });
 }

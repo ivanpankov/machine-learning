@@ -266,7 +266,7 @@ class LinearRegressionUni extends Component {
             </p>
             <p>
               <span className="mr-3">Goal:</span>
-              <span style={{ position: 'relative', top: '12px' }}>
+              <span style={{ position: 'relative', top: '10px' }}>
                 <MathJax.Node inline>{texGoal}</MathJax.Node>
               </span>
             </p>

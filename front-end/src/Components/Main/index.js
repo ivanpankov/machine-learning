@@ -20,7 +20,6 @@ export default class Main extends Component {
     return (
       <MathJax.Context
         input="tex"
-        options={{ asciimath2jax: { preview: 'none' } }}
       >
         <main className={this.props.className}>
           <div className="container">
